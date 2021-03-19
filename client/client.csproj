@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="background.png" />
+    <None Remove="door.png" />
+    <None Remove="group.png" />
+    <None Remove="help.png" />
+    <None Remove="options.png" />
+    <None Remove="questionmark.png" />
+    <None Remove="solo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controller\" />
+    <Folder Include="View\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\background.png" />
+    <Resource Include="images\door.png" />
+    <Resource Include="images\group.png" />
+    <Resource Include="images\help.png" />
+    <Resource Include="images\options.png" />
+    <Resource Include="images\questionmark.png" />
+    <Resource Include="images\solo.png" />
+  </ItemGroup>
+
+</Project>
