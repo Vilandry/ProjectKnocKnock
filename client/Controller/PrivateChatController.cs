@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
 
-namespace client.ViewModel
+namespace knock.Controller
 {
-    class ClientViewModel : ViewModelBase
+    class PrivateChatController
     {
-        
     }
 }

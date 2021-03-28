@@ -1,0 +1,104 @@
+﻿<Window x:Class="knock.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:knock"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="803" Width="1522">
+    <Grid>
+
+
+
+        <Grid.Background>
+            <ImageBrush ImageSource="/images/background.png"/>
+        </Grid.Background>
+        <TabControl Background="#4CEAEAEA" x:Name="MainTab" Margin="112,0,10,10" BorderBrush="{x:Null}" >
+            <TabItem Header="BeforeLogin" Background="{x:Null}" Opacity="100" x:Name="BeforeLogin" BorderBrush="{x:Null}">
+                <Grid Visibility="Visible">
+                    <Grid>
+                        <Button Click="loginAttempt" x:Name="LoginButton" Content="Log in!" HorizontalAlignment="Left" Margin="43,638,0,0" VerticalAlignment="Top" Height="69" Width="347" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <Label Content="Username" HorizontalAlignment="Left" Margin="43,417,0,0" VerticalAlignment="Top" Height="41" Width="141" FontSize="22" FontFamily="Bahnschrift Light"/>
+                        <Label Content="Password" HorizontalAlignment="Left" Margin="43,483,0,0" VerticalAlignment="Top" Height="40" Width="141" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <PasswordBox x:Name="LoginPasswordBox" HorizontalAlignment="Left" Margin="184,476,0,0" VerticalAlignment="Top" Width="206" Height="44" FontSize="22"/>
+                        <TextBox x:Name="LoginNameBox" HorizontalAlignment="Left" Margin="184,417,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="206" Height="41" FontFamily="Bahnschrift Light" FontSize="22"/>
+                    </Grid>
+
+                    <Grid>
+                        <Label Content="Username" HorizontalAlignment="Left" Margin="697,417,0,0" VerticalAlignment="Top" Height="41" Width="141" FontSize="22" FontFamily="Bahnschrift Light"/>
+                        <Label Content="Password" HorizontalAlignment="Left" Margin="697,488,0,0" VerticalAlignment="Top" Height="40" Width="141" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <TextBox x:Name="SignupNameBox" HorizontalAlignment="Left" Margin="878,417,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="206" Height="41" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <PasswordBox x:Name="SignupPasswordBox" HorizontalAlignment="Left" Margin="878,476,0,0" VerticalAlignment="Top" Width="206" Height="44" FontSize="22"/>
+                        <Button x:Name="SignupButton" Content="Sign up!" HorizontalAlignment="Left" Margin="697,638,0,0" VerticalAlignment="Top" Height="69" Width="387" FontFamily="Bahnschrift Light" FontSize="22"/>
+
+                        <RadioButton x:Name="otherButton" GroupName="gender" Content="Other" HorizontalAlignment="Left" Margin="712,583,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="maleButton" GroupName="gender" Content="Male" HorizontalAlignment="Left" Margin="712,558,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="femaleButton" GroupName="gender" Content="Female" HorizontalAlignment="Left" Margin="712,533,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22"/>
+
+                        <RadioButton x:Name="uET" GroupName="age" Content="under 18" HorizontalAlignment="Left" Margin="902,525,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="ETTT" GroupName="age" Content="18 - 23" HorizontalAlignment="Left" Margin="902,557,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="oTT" GroupName="age" Content="over 23" HorizontalAlignment="Left" Margin="902,581,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22" RenderTransformOrigin="0.557,1.381"/>
+                        <Image HorizontalAlignment="Left" Height="356" Margin="287,0,0,0" VerticalAlignment="Top" Width="755" Source="/View/banner.jpg"/>
+
+
+                    </Grid>
+                    
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="MainMenu" Background="{x:Null}" Opacity="0.5" x:Name="MainMenu">
+
+            </TabItem>
+
+            <TabItem Header="PrivateChat" Background="{x:Null}" Opacity="0.5" x:Name="PrivateChat">
+
+            </TabItem>
+
+            <TabItem Header="ChatGroupList" Background="{x:Null}" Opacity="0.5" x:Name="ChatGroupList">
+
+            </TabItem>
+
+            <TabItem Header="ChatGroupList" Background="{x:Null}" Opacity="0.5" x:Name="CurrentGroup">
+
+            </TabItem>
+
+
+        </TabControl>
+
+
+        <Button Content="" HorizontalAlignment="Left" Margin="7,10,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2" x:Name="PrivateChatButton" Click="BeginSoloSearch" BorderThickness="0,0,0,0">
+            <Button.Background>
+                <ImageBrush ImageSource="/images/solo.png"/>
+            </Button.Background>
+
+
+
+        </Button>
+
+        <Button Content="" HorizontalAlignment="Left" Margin="7,115,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2" x:Name="ChatGroupListButton" BorderThickness="0,0,0,0">
+            <Button.Background>
+                <ImageBrush ImageSource="/images/group.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button Content="" HorizontalAlignment="Left" Margin="7,220,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2" x:Name="OptionsButton" BorderThickness="0,0,0,0">
+            <Button.Background>
+                <ImageBrush ImageSource="/images/options.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button Content="" HorizontalAlignment="Left" Margin="7,546,0,0" VerticalAlignment="Top" Height="100" Width="100" x:Name="HelpButton" BorderThickness="0,0,0,0">
+            <Button.Background>
+                <ImageBrush ImageSource="/images/help.png"/>
+            </Button.Background>
+        </Button>
+
+        <Button Content="" HorizontalAlignment="Left" Margin="7,651,0,0" VerticalAlignment="Top" Height="100" Width="100" x:Name="LogOutButton" BorderThickness="0,0,0,0">
+            <Button.Background>
+                <ImageBrush ImageSource="/images/door.png"/>
+            </Button.Background>
+        </Button>
+
+
+    </Grid>
+</Window>

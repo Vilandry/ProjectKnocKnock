@@ -4,21 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public enum AGECATEGORY
-{
-    SIXTEEN,
-    TWENTY,
-    TWENTYFIVEPLUS
-}
 
-public enum SEX
-{
-    FEMALE,
-    MALE,
-    OTHER
-}
 
-namespace client.Model
+namespace knock.Model
 {
     class User
     {
@@ -27,5 +15,30 @@ namespace client.Model
         private String username;
 
         private List<int> friendIDList;
+
+
+        public int Id { get { return userid; } set { userid = value; } }
+
+        public AGECATEGORY AgeCategory { get { return agecat; } set { agecat = value; } }
+
+        public String Username { get { return username; } set { username = value; } }
+
+        public List<int> FriendIDList { get { return friendIDList; } }
     }
+
+    public enum AGECATEGORY
+    {
+        SIXTEEN,
+        TWENTY,
+        TWENTYFIVEPLUS
+    }
+
+
+    public enum SEX
+    {
+        FEMALE,
+        MALE,
+        OTHER
+    }
+
 }

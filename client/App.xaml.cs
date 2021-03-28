@@ -5,13 +5,18 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using knock.Controller;
+using knock.Model;
 
-namespace client
+namespace knock
 {
+
+    
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
     {
+        
     }
 }

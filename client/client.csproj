@@ -14,11 +14,7 @@
     <None Remove="options.png" />
     <None Remove="questionmark.png" />
     <None Remove="solo.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Controller\" />
-    <Folder Include="View\" />
+    <None Remove="View\banner.jpg" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +25,7 @@
     <Resource Include="images\options.png" />
     <Resource Include="images\questionmark.png" />
     <Resource Include="images\solo.png" />
+    <Resource Include="View\banner.jpg" />
   </ItemGroup>
 
 </Project>
