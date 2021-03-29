@@ -12,6 +12,8 @@ namespace knock.Model
     {
         private int userid;
         private AGECATEGORY agecat;
+        private SEX gender;
+
         private String username;
 
         private List<int> friendIDList;
@@ -20,6 +22,8 @@ namespace knock.Model
         public int Id { get { return userid; } set { userid = value; } }
 
         public AGECATEGORY AgeCategory { get { return agecat; } set { agecat = value; } }
+
+        public SEX Gender { get { return gender; } set { gender = value; } }
 
         public String Username { get { return username; } set { username = value; } }
 
@@ -40,5 +44,6 @@ namespace knock.Model
         MALE,
         OTHER
     }
+
 
 }

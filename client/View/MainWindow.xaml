@@ -29,20 +29,20 @@
                         <Label Content="Password" HorizontalAlignment="Left" Margin="697,488,0,0" VerticalAlignment="Top" Height="40" Width="141" FontFamily="Bahnschrift Light" FontSize="22"/>
                         <TextBox x:Name="SignupNameBox" HorizontalAlignment="Left" Margin="878,417,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="206" Height="41" FontFamily="Bahnschrift Light" FontSize="22"/>
                         <PasswordBox x:Name="SignupPasswordBox" HorizontalAlignment="Left" Margin="878,476,0,0" VerticalAlignment="Top" Width="206" Height="44" FontSize="22"/>
-                        <Button x:Name="SignupButton" Content="Sign up!" HorizontalAlignment="Left" Margin="697,638,0,0" VerticalAlignment="Top" Height="69" Width="387" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <Button Click="registerAttempt" x:Name="SignupButton" Content="Sign up!" HorizontalAlignment="Left" Margin="697,638,0,0" VerticalAlignment="Top" Height="69" Width="387" FontFamily="Bahnschrift Light" FontSize="22"/>
 
-                        <RadioButton x:Name="otherButton" GroupName="gender" Content="Other" HorizontalAlignment="Left" Margin="712,583,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22"/>
-                        <RadioButton x:Name="maleButton" GroupName="gender" Content="Male" HorizontalAlignment="Left" Margin="712,558,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22"/>
-                        <RadioButton x:Name="femaleButton" GroupName="gender" Content="Female" HorizontalAlignment="Left" Margin="712,533,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="otherButton" GroupName="gender" Content="Other" HorizontalAlignment="Left" Margin="712,581,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="maleButton" GroupName="gender" Content="Male" HorizontalAlignment="Left" Margin="712,559,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="femaleButton" GroupName="gender" Content="Female" HorizontalAlignment="Left" Margin="712,532,0,0" VerticalAlignment="Top" FontFamily="Bahnschrift Light" FontSize="22" IsChecked="True"/>
 
-                        <RadioButton x:Name="uET" GroupName="age" Content="under 18" HorizontalAlignment="Left" Margin="902,525,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22"/>
-                        <RadioButton x:Name="ETTT" GroupName="age" Content="18 - 23" HorizontalAlignment="Left" Margin="902,557,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22"/>
-                        <RadioButton x:Name="oTT" GroupName="age" Content="over 23" HorizontalAlignment="Left" Margin="902,581,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22" RenderTransformOrigin="0.557,1.381"/>
+                        <RadioButton x:Name="uET" GroupName="age" Content="under 18" HorizontalAlignment="Left" Margin="902,532,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="ETTT" GroupName="age" Content="18 - 23" HorizontalAlignment="Left" Margin="902,559,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22"/>
+                        <RadioButton x:Name="oTT" GroupName="age" Content="over 23" HorizontalAlignment="Left" Margin="902,581,0,0" VerticalAlignment="Top" Height="27" FontFamily="Bahnschrift Light" FontSize="22" RenderTransformOrigin="0.557,1.381" IsChecked="True"/>
                         <Image HorizontalAlignment="Left" Height="356" Margin="287,0,0,0" VerticalAlignment="Top" Width="755" Source="/View/banner.jpg"/>
 
 
                     </Grid>
-                    
+
                 </Grid>
             </TabItem>
 

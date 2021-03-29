@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.IO;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 using knock.Model;
 
@@ -15,28 +16,63 @@ namespace knock.Controller
     {
         private TcpClient client;
         private bool canAccess;
+        private string hostname;
+        private int port;
 
         public LoginController()
         {
-            try
+            client = new TcpClient();
+            /*try
             {
-                client = new TcpClient("localhost", 11000);
+                hostname = "localhost";
+                port = 11000;
+                client = new TcpClient(hostname, port);
                 canAccess = true;
+                
             }
             catch
             {
                 canAccess = false;
+            }*/
+        }
+
+        public bool Connected()
+        {
+            if(client == null)
+            {
+                ///then its kinda waow, should do smth shit here
+                Trace.WriteLine("\n\nclient was null wtf!\n\n");
+                return false;
             }
+            return client.Connected;
+        }
+
+        public bool Reconnect()
+        {
+            if(!client.Connected)
+            {
+                try
+                {
+                    client.Connect(hostname, port);
+                }
+                catch(Exception e)
+                {
+                    ///to be decided
+                    Trace.WriteLine("\n\ncouldnt really connect!\n\n");
+                }
+            }
+            return client.Connected;
         }
 
         public bool tryLogin(User user, string pwd)
         {
             try
             {
+                Reconnect();
                 bool success = false;
 
                 
-                string message = "LOGIN" + "|" + user.Username + "|" + MD5.HashData(        ASCIIEncoding.ASCII.GetBytes(pwd)             );
+                string message = "LOGIN" + "|" + user.Username + "|" + Utility.CreateMD5(pwd);
                 string server = "localhost";
                 /// Create a TcpClient.
                 /// Note, for this client to work you need to have a TcpServer
@@ -70,7 +106,7 @@ namespace knock.Controller
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
                 success = responseData == "OK";
-                Console.WriteLine("Received: {0}", responseData);
+                Trace.WriteLine("Received: {0}", responseData);
 
 
 
@@ -84,6 +120,10 @@ namespace knock.Controller
                 ///maybe we should also send an event here
                 return false;
             }
+            finally
+            {
+                client.Close();
+            }
         }
 
 
@@ -91,10 +131,11 @@ namespace knock.Controller
         {
             try
             {
+                Reconnect();
                 bool success = false;
 
 
-                string message = "LOGIN" + "|" + user.Username + "|" + MD5.HashData(ASCIIEncoding.ASCII.GetBytes(pwd));
+                string message = "REGISTER" + "|" + user.Username + "|" + Utility.CreateMD5(pwd) + "|" + (int)user.AgeCategory + "|" + (int)user.Gender;
                 string server = "localhost";
                 /// Create a TcpClient.
                 /// Note, for this client to work you need to have a TcpServer
@@ -128,7 +169,7 @@ namespace knock.Controller
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
                 success = responseData == "OK";
-                Console.WriteLine("Received: {0}", responseData);
+                Trace.WriteLine("Received: {0}", responseData);
 
 
 
@@ -141,6 +182,10 @@ namespace knock.Controller
             {
                 ///maybe we should also send an event here
                 return false;
+            }
+            finally
+            {
+                client.Close();
             }
         }
     }

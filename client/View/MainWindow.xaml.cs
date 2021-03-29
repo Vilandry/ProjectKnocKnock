@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Security.Cryptography;
+using System.Diagnostics;
 using knock.Model;
 using knock.Controller;
 
@@ -25,7 +26,7 @@ namespace knock
     {
         LoginController login;
         User curUser;
-
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -43,10 +44,10 @@ namespace knock
         void loginAttempt(Object sender, RoutedEventArgs e)
         {
             curUser.Username = LoginNameBox.Text;
-            string pwd = LoginPasswordBox.Password;
+            string pwd =  LoginPasswordBox.Password;
+            Trace.WriteLine("\n\n\n" + Utility.CreateMD5(pwd) + "\n\n\n");
 
-
-            bool success = login.tryLogin(curUser, pwd);
+            bool success = login.tryLogin(curUser, Utility.CreateMD5(pwd));
 
             this.LoginNameBox.Text = curUser.Username;
 
@@ -58,8 +59,9 @@ namespace knock
 
         void registerAttempt(Object sender, RoutedEventArgs e)
         {
-            curUser.Username = LoginNameBox.Text;
-            string pwd = LoginPasswordBox.Password;
+            curUser.Username = SignupNameBox.Text;
+            string pwd = SignupPasswordBox.Password;
+            Trace.WriteLine("\n\n\n" + Utility.CreateMD5(pwd) + "\n\n\n");
 
             if (this.ETTT.IsChecked == true) ///18-23
             {
@@ -67,11 +69,34 @@ namespace knock
             }
             else if (this.oTT.IsChecked == true) ///23+
             {
-
+                curUser.AgeCategory = AGECATEGORY.TWENTYFIVEPLUS;
             }
             else if (this.uET.IsChecked == true) ///18-
             {
+                curUser.AgeCategory = AGECATEGORY.SIXTEEN;
+            }
 
+
+            if (this.maleButton.IsChecked == true) ///18-23
+            {
+                curUser.Gender = SEX.MALE;
+            }
+            else if (this.femaleButton.IsChecked == true) ///23+
+            {
+                curUser.Gender = SEX.FEMALE;
+            }
+            else if (this.otherButton.IsChecked == true) ///18-
+            {
+                curUser.Gender = SEX.OTHER;
+            }
+
+
+
+
+            bool success = login.tryRegister(curUser, pwd);
+            if (success)
+            {
+                MainMenu.IsSelected = true;
             }
         }
     }
