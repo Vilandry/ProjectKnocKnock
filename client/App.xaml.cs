@@ -5,10 +5,10 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using knock.Controller;
-using knock.Model;
+using client.Controller;
+using client.Model;
 
-namespace knock
+namespace client
 {
 
     

@@ -14,10 +14,13 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Security.Cryptography;
 using System.Diagnostics;
-using knock.Model;
-using knock.Controller;
+using System.Windows.Controls.Primitives;
 
-namespace knock
+using client.View;
+using client.Model;
+using client.Controller;
+
+namespace client
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -26,13 +29,16 @@ namespace knock
     {
         LoginController login;
         User curUser;
-        
+        Popup errPopup;
+
         public MainWindow()
         {
             InitializeComponent();
             curUser = new User();
             login = new LoginController();
-            
+            this.privateChatHistory.IsReadOnly = true;
+            errPopup = new Popup();
+
         }
 
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
@@ -43,18 +49,32 @@ namespace knock
 
         void loginAttempt(Object sender, RoutedEventArgs e)
         {
-            curUser.Username = LoginNameBox.Text;
-            string pwd =  LoginPasswordBox.Password;
+
+
+                
+            curUser.Username = LoginNameBox.Text;            
+            string pwd = LoginPasswordBox.Password;              
             Trace.WriteLine("\n\n\n" + Utility.CreateMD5(pwd) + "\n\n\n");
+                
+            int success = login.tryLogin(curUser, pwd);                
 
-            bool success = login.tryLogin(curUser, Utility.CreateMD5(pwd));
-
-            this.LoginNameBox.Text = curUser.Username;
-
-            if(success)
+                
+            if (success == 1)                
+            {                    
+                MainMenu.IsSelected = true;                    
+                displayButtons();                
+            }               
+            else if (success == 0)              
             {
-                MainMenu.IsSelected = true;
+                ErrorWindow popup = new ErrorWindow("Wrong username or password! Make sure You registered with this username and did not misstype the password!");
+                popup.ShowDialog();
             }
+            else if(success == -1)
+            {
+                ErrorWindow popup = new ErrorWindow("Could not connect to the servers! Maybe it's our fault, maybe You have no connection... Who knows?");
+                popup.ShowDialog();
+            }
+
         }
 
         void registerAttempt(Object sender, RoutedEventArgs e)
@@ -97,7 +117,29 @@ namespace knock
             if (success)
             {
                 MainMenu.IsSelected = true;
+                displayButtons();
             }
+        }
+
+        void test(Object sender, RoutedEventArgs e)
+        {
+            this.LoginNameBox.Text = "kooool";
+        }
+
+        void displayButtons()
+        {
+            this.groupChatButton.Visibility = System.Windows.Visibility.Visible;
+            this.soloSearchButton.Visibility = System.Windows.Visibility.Visible;
+            this.optionsButton.Visibility = System.Windows.Visibility.Visible;
+            this.logoutButton.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        void hideButtons()
+        {
+            this.groupChatButton.Visibility = System.Windows.Visibility.Hidden;
+            this.soloSearchButton.Visibility = System.Windows.Visibility.Hidden;
+            this.optionsButton.Visibility = System.Windows.Visibility.Hidden;
+            this.logoutButton.Visibility = System.Windows.Visibility.Hidden;
         }
     }
 }

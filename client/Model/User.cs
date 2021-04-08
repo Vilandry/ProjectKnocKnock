@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 
 
-namespace knock.Model
+namespace client.Model
 {
     class User
     {
@@ -18,6 +18,9 @@ namespace knock.Model
 
         private List<int> friendIDList;
 
+        private bool hasOngoingChat;
+
+
 
         public int Id { get { return userid; } set { userid = value; } }
 
@@ -28,21 +31,8 @@ namespace knock.Model
         public String Username { get { return username; } set { username = value; } }
 
         public List<int> FriendIDList { get { return friendIDList; } }
-    }
 
-    public enum AGECATEGORY
-    {
-        SIXTEEN,
-        TWENTY,
-        TWENTYFIVEPLUS
-    }
-
-
-    public enum SEX
-    {
-        FEMALE,
-        MALE,
-        OTHER
+        public bool HasOngoingChat { get { return hasOngoingChat; } set { hasOngoingChat = value; } }
     }
 
 

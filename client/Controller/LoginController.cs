@@ -8,9 +8,9 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Diagnostics;
 
-using knock.Model;
+using client.Model;
 
-namespace knock.Controller
+namespace client.Controller
 {
     class LoginController
     {
@@ -21,6 +21,8 @@ namespace knock.Controller
 
         public LoginController()
         {
+            hostname = "localhost";
+            port = 11000;
             client = new TcpClient();
             /*try
             {
@@ -53,32 +55,49 @@ namespace knock.Controller
             {
                 try
                 {
+                    client = new TcpClient();
                     client.Connect(hostname, port);
                 }
                 catch(Exception e)
                 {
                     ///to be decided
-                    Trace.WriteLine("\n\ncouldnt really connect!\n\n");
+                    Trace.WriteLine("\n\ncouldnt really connect in reconnect()!\n\n");
                 }
+            }
+
+            return client.Connected;
+        }
+
+        public bool ForcedReconnect()
+        {
+            try
+            {
+                client = new TcpClient();
+                client.Connect(hostname, port);
+                Trace.WriteLine("\n\n" + client.Connected + "\n\n");
+            }
+            catch (Exception e)
+            {
+                ///to be decided
+                Trace.WriteLine("\n\ncouldnt really connect in forcedReconnect()!\n\n");
             }
             return client.Connected;
         }
 
-        public bool tryLogin(User user, string pwd)
+        public void DropConnection()
+        {
+            client.Close();
+        }
+
+        public int tryLogin(User user, string pwd)
         {
             try
             {
-                Reconnect();
-                bool success = false;
+                ForcedReconnect();
+                int success = 0;
 
                 
                 string message = "LOGIN" + "|" + user.Username + "|" + Utility.CreateMD5(pwd);
-                string server = "localhost";
-                /// Create a TcpClient.
-                /// Note, for this client to work you need to have a TcpServer
-                /// connected to the same address as specified by the server, port
-                /// combination.
-                Int32 port = 13000;
 
                 /// Translate the passed message into ASCII and store it as a Byte array.
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
@@ -105,20 +124,17 @@ namespace knock.Controller
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-                success = responseData == "OK";
+                success = responseData == "OK" ? 1 : 0;
                 Trace.WriteLine("Received: {0}", responseData);
-
-
-
-
-
+                stream.Close();
 
                 return success;
             }
             catch(Exception e)
             {
                 ///maybe we should also send an event here
-                return false;
+                Trace.WriteLine("\n\n" + "Error during login attempt, error msg: " + e.Message + "\n\n");
+                return -1;
             }
             finally
             {
@@ -131,17 +147,11 @@ namespace knock.Controller
         {
             try
             {
-                Reconnect();
+                ForcedReconnect();
                 bool success = false;
 
 
                 string message = "REGISTER" + "|" + user.Username + "|" + Utility.CreateMD5(pwd) + "|" + (int)user.AgeCategory + "|" + (int)user.Gender;
-                string server = "localhost";
-                /// Create a TcpClient.
-                /// Note, for this client to work you need to have a TcpServer
-                /// connected to the same address as specified by the server, port
-                /// combination.
-                Int32 port = 13000;
 
                 /// Translate the passed message into ASCII and store it as a Byte array.
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
@@ -170,10 +180,7 @@ namespace knock.Controller
 
                 success = responseData == "OK";
                 Trace.WriteLine("Received: {0}", responseData);
-
-
-
-
+                stream.Close();
 
 
                 return success;
@@ -181,10 +188,12 @@ namespace knock.Controller
             catch (Exception e)
             {
                 ///maybe we should also send an event here
+                Trace.WriteLine("\n\n" + "Error during login attempt, error msg: " + e.Message + "\n\n");
                 return false;
             }
             finally
             {
+                
                 client.Close();
             }
         }

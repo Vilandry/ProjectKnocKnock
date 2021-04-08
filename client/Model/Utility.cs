@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace knock.Model
+namespace client.Model
 {
     public static class Utility
     {
@@ -25,5 +25,20 @@ namespace knock.Model
                 return sb.ToString();
             }
         }
+    }
+
+    public enum AGECATEGORY
+    {
+        SIXTEEN,
+        TWENTY,
+        TWENTYFIVEPLUS
+    }
+
+
+    public enum SEX
+    {
+        FEMALE,
+        MALE,
+        OTHER
     }
 }
