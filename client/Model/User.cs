@@ -20,7 +20,7 @@ namespace client.Model
 
         private bool hasOngoingChat;
 
-
+        public User() { friendIDList = new List<int>(); }
 
         public int Id { get { return userid; } set { userid = value; } }
 

@@ -22,7 +22,7 @@ namespace client.Controller
         public LoginController()
         {
             hostname = "localhost";
-            port = 11000;
+            port = PortManager.instance().Loginport;
             client = new TcpClient();
             /*try
             {
@@ -61,7 +61,7 @@ namespace client.Controller
                 catch(Exception e)
                 {
                     ///to be decided
-                    Trace.WriteLine("\n\ncouldnt really connect in reconnect()!\n\n");
+                    Trace.WriteLine(e.Message+"\nso couldnt really connect in reconnect()!\n\n");
                 }
             }
 
@@ -79,7 +79,7 @@ namespace client.Controller
             catch (Exception e)
             {
                 ///to be decided
-                Trace.WriteLine("\n\ncouldnt really connect in forcedReconnect()!\n\n");
+                Trace.WriteLine("\n\n" + "Error during reconnect attempt, error msg: " + e.Message + "\n\n");
             }
             return client.Connected;
         }
@@ -152,29 +152,16 @@ namespace client.Controller
 
 
                 string message = "REGISTER" + "|" + user.Username + "|" + Utility.CreateMD5(pwd) + "|" + (int)user.AgeCategory + "|" + (int)user.Gender;
-
-                /// Translate the passed message into ASCII and store it as a Byte array.
                 Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
-                /// Get a client stream for reading and writing.
-                //  Stream stream = client.GetStream();
 
                 NetworkStream stream = client.GetStream();
-
-                /// Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
-
-                //Console.WriteLine("Sent: {0}", message);
-
-                /// Receive the TcpServer.response.
-
-                /// Buffer to store the response bytes.
                 data = new Byte[256];
 
-                /// String to store the response ASCII representation.
+
                 String responseData = String.Empty;
 
-                /// Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 

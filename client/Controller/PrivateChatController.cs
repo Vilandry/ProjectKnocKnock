@@ -18,9 +18,17 @@ namespace client.Controller
         private string hostname;
         private int port;
 
-        public bool connectToPrivateChatSearcher(User user)
+        public PrivateChatController(int portnum, string host)
         {
-            return false;
+            port = portnum;
+            hostname = host;
+        }
+
+        public void connectToPrivateChatQueue(User curUser)
+        {
+            client = new TcpClient(hostname, port);
+
+            string msg =""; 
         }
 
         public void handeMessaging()

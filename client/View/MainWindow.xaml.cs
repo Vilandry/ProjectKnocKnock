@@ -38,6 +38,7 @@ namespace client
             login = new LoginController();
             this.privateChatHistory.IsReadOnly = true;
             errPopup = new Popup();
+            hideButtons();
 
         }
 
@@ -48,10 +49,7 @@ namespace client
 
 
         void loginAttempt(Object sender, RoutedEventArgs e)
-        {
-
-
-                
+        {                
             curUser.Username = LoginNameBox.Text;            
             string pwd = LoginPasswordBox.Password;              
             Trace.WriteLine("\n\n\n" + Utility.CreateMD5(pwd) + "\n\n\n");
@@ -119,6 +117,11 @@ namespace client
                 MainMenu.IsSelected = true;
                 displayButtons();
             }
+        }
+
+        void joinPrivateMatchQueue(Object sender, RoutedEventArgs e)
+        {
+
         }
 
         void test(Object sender, RoutedEventArgs e)

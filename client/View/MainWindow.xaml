@@ -16,7 +16,7 @@
             <TabItem Header="BeforeLogin" Background="{x:Null}" Opacity="100" x:Name="BeforeLogin" BorderBrush="{x:Null}">
                 <Grid Visibility="Visible">
                     <Button Click="loginAttempt" x:Name="LoginButton" Content="Log in!" HorizontalAlignment="Left" Margin="43,638,0,0" VerticalAlignment="Top" Height="69" Width="347" FontFamily="Bahnschrift Light" FontSize="22"/>
-                    
+
                     <Label Content="Username" HorizontalAlignment="Left" Margin="43,417,0,0" VerticalAlignment="Top" Height="41" Width="141" FontSize="22" FontFamily="Bahnschrift Light"/>
                     <Label Content="Password" HorizontalAlignment="Left" Margin="43,483,0,0" VerticalAlignment="Top" Height="40" Width="141" FontFamily="Bahnschrift Light" FontSize="22"/>
                     <TextBox x:Name="LoginNameBox" HorizontalAlignment="Left" Margin="184,417,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="206" Height="41" FontFamily="Bahnschrift Light" FontSize="22"/>
@@ -41,15 +41,16 @@
             </TabItem>
 
             <TabItem Header="MainMenu" Background="{x:Null}" Opacity="0.5" x:Name="MainMenu">
-                <Grid>
-                    <Button Click="test" Content="Button" Margin="426,212,679,441"/>
-                </Grid>
+                <Grid/>
 
             </TabItem>
 
             <TabItem Header="PrivateChat" Background="{x:Null}" Opacity="0.5" x:Name="PrivateChat">
                 <Grid>
-                    <TextBox x:Name="privateChatHistory" HorizontalAlignment="Left" Margin="279,10,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="1011" Height="607"/>
+                    <TextBox x:Name="privateChatHistory" HorizontalAlignment="Left" Margin="77,10,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="1213" Height="607" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+                    <TextBox HorizontalAlignment="Left" Margin="77,646,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="1114" Height="64"/>
+                    <Button x:Name="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="1196,646,0,0" VerticalAlignment="Top" Height="64" Width="94" IsDefault="True"/>
+
                 </Grid>
             </TabItem>
 
@@ -63,10 +64,11 @@
 
 
 
+
         </TabControl>
 
 
-        <Button x:Name="soloSearchButton" Content="" HorizontalAlignment="Left" Margin="7,10,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2" Click="BeginSoloSearch" BorderThickness="0,0,0,0" Visibility="Hidden">
+        <Button x:Name="soloSearchButton" Content="" HorizontalAlignment="Left" Margin="7,10,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2" Click="BeginSoloSearch" BorderThickness="0,0,0,0">
             <Button.Background>
                 <ImageBrush ImageSource="/images/solo.png"/>
             </Button.Background>
@@ -75,13 +77,13 @@
 
         </Button>
 
-        <Button x:Name="groupChatButton" Content="" HorizontalAlignment="Left" Margin="7,115,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0" Visibility="Hidden">
+        <Button x:Name="groupChatButton" Content="" HorizontalAlignment="Left" Margin="7,115,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0">
             <Button.Background>
                 <ImageBrush ImageSource="/images/group.png"/>
             </Button.Background>
         </Button>
 
-        <Button x:Name="optionsButton" Content="" HorizontalAlignment="Left" Margin="7,220,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0" Visibility="Hidden">
+        <Button x:Name="optionsButton" Content="" HorizontalAlignment="Left" Margin="7,220,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0">
             <Button.Background>
                 <ImageBrush ImageSource="/images/options.png"/>
             </Button.Background>
@@ -93,7 +95,7 @@
             </Button.Background>
         </Button>
 
-        <Button x:Name="logoutButton" Content="" HorizontalAlignment="Left" Margin="7,651,0,0" VerticalAlignment="Top" Height="100" Width="100"  BorderThickness="0,0,0,0" Visibility="Collapsed">
+        <Button x:Name="logoutButton" Content="" HorizontalAlignment="Left" Margin="7,651,0,0" VerticalAlignment="Top" Height="100" Width="100"  BorderThickness="0,0,0,0">
             <Button.Background>
                 <ImageBrush ImageSource="/images/door.png"/>
             </Button.Background>
