@@ -143,12 +143,12 @@ namespace client.Controller
         }
 
 
-        public bool tryRegister(User user, string pwd)
+        public int tryRegister(User user, string pwd)
         {
             try
             {
                 ForcedReconnect();
-                bool success = false;
+                int success = 0;
 
 
                 string message = "REGISTER" + "|" + user.Username + "|" + Utility.CreateMD5(pwd) + "|" + (int)user.AgeCategory + "|" + (int)user.Gender;
@@ -165,7 +165,7 @@ namespace client.Controller
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-                success = responseData == "OK";
+                success = responseData == "OK" ? 1 : 0;
                 Trace.WriteLine("Received: {0}", responseData);
                 stream.Close();
 
@@ -176,7 +176,7 @@ namespace client.Controller
             {
                 ///maybe we should also send an event here
                 Trace.WriteLine("\n\n" + "Error during login attempt, error msg: " + e.Message + "\n\n");
-                return false;
+                return -1;
             }
             finally
             {

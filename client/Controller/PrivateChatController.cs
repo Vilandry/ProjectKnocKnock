@@ -16,19 +16,34 @@ namespace client.Controller
     {
         private TcpClient client;
         private string hostname;
-        private int port;
 
-        public PrivateChatController(int portnum, string host)
+        public PrivateChatController(string host)
         {
-            port = portnum;
             hostname = host;
         }
 
-        public void connectToPrivateChatQueue(User curUser)
+        public bool connectToPrivateChatQueue(User curUser, SEX LookingForSex)
         {
-            client = new TcpClient(hostname, port);
+            bool success = false;
+            client = new TcpClient(hostname, PortManager.instance().Matchport);
+            NetworkStream stream = client.GetStream();
 
-            string msg =""; 
+            string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)LookingForSex;
+            Trace.WriteLine(msg);
+
+            Byte[] data = System.Text.Encoding.ASCII.GetBytes(msg);            
+            stream.Write(data, 0, data.Length);
+
+            String responseData = String.Empty;
+
+            // Read the first batch of the TcpServer response bytes.
+            stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data);
+            Trace.WriteLine("Received from matchserver: {0}", responseData);
+
+            success = (responseData == "ok");
+
+            return success;
         }
 
         public void handeMessaging()

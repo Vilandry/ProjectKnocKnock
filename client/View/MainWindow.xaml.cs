@@ -111,17 +111,29 @@ namespace client
 
 
 
-            bool success = login.tryRegister(curUser, pwd);
-            if (success)
+            int success = login.tryRegister(curUser, pwd);
+            if (success == 1)
             {
                 MainMenu.IsSelected = true;
                 displayButtons();
             }
+            else if (success == 0)
+            {
+                ErrorWindow popup = new ErrorWindow("Couldnt register the current username, since it's taken!");
+                popup.ShowDialog();
+            }
+            else if (success == -1)
+            {
+                ErrorWindow popup = new ErrorWindow("Could not connect to the servers! Maybe it's our fault, maybe You have no connection... Who knows?");
+                popup.ShowDialog();
+            }
+
         }
 
         void joinPrivateMatchQueue(Object sender, RoutedEventArgs e)
         {
 
+            string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)lookingForSex;
         }
 
         void test(Object sender, RoutedEventArgs e)

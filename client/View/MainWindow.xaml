@@ -41,14 +41,46 @@
             </TabItem>
 
             <TabItem Header="MainMenu" Background="{x:Null}" Opacity="0.5" x:Name="MainMenu">
-                <Grid/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="31*"/>
+                        <ColumnDefinition Width="1363*"/>
+                    </Grid.ColumnDefinitions>
 
+                    <RadioButton x:Name="lookingForFemale" Content="Female." Margin="99,435,1085,300" IsChecked="True" GroupName="lookingfor" Grid.Column="1" FontFamily="Bahnschrift Light">
+                        <RadioButton.RenderTransform>
+                            <ScaleTransform ScaleX="3" ScaleY="3"/>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
+
+                    <RadioButton x:Name="lookingForMale" Content="Male." Margin="99,482,1085,253" GroupName="lookingfor" Grid.Column="1" FontFamily="Bahnschrift Light">
+                        <RadioButton.RenderTransform>
+                            <ScaleTransform ScaleX="3" ScaleY="3"/>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
+
+                    <RadioButton x:Name="lookingForOther" Content="Other?" Margin="99,529,1085,206" GroupName="lookingfor" Grid.Column="1" FontFamily="Bahnschrift Light">
+                        <RadioButton.RenderTransform>
+                            <ScaleTransform ScaleX="3" ScaleY="3"/>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
+
+                    <RadioButton x:Name="lookingForAny" Content="Any!" Margin="99,576,1085,159" GroupName="lookingfor" Grid.Column="1" FontFamily="Bahnschrift Light">
+                        <RadioButton.RenderTransform>
+                            <ScaleTransform ScaleX="3" ScaleY="3"/>
+                        </RadioButton.RenderTransform>
+                    </RadioButton>
+
+                    <Button x:Name="joinPrivateMatchServer" Content="Give me a match!" Margin="99,681,110,10" Grid.Column="1"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="102,364,0,0" Text="Aaaaand I'm looking for a..." TextWrapping="Wrap" VerticalAlignment="Top" Height="71" Width="688" FontFamily="Bahnschrift Light" Grid.Column="1" FontSize="48"/>
+
+                </Grid>
             </TabItem>
 
             <TabItem Header="PrivateChat" Background="{x:Null}" Opacity="0.5" x:Name="PrivateChat">
                 <Grid>
                     <TextBox x:Name="privateChatHistory" HorizontalAlignment="Left" Margin="77,10,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="1213" Height="607" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
-                    <TextBox HorizontalAlignment="Left" Margin="77,646,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="1114" Height="64"/>
+                    <TextBox x:Name="messageTextBox" HorizontalAlignment="Left" Margin="77,646,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="1114" Height="64"/>
                     <Button x:Name="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="1196,646,0,0" VerticalAlignment="Top" Height="64" Width="94" IsDefault="True"/>
 
                 </Grid>
@@ -61,6 +93,7 @@
             <TabItem Header="ChatGroupList" Background="{x:Null}" Opacity="0.5" x:Name="CurrentGroup">
 
             </TabItem>
+
 
 
 
