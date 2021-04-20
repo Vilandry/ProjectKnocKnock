@@ -13,6 +13,7 @@ namespace client.Model
         private int matchport;
         private int loginport;
         private int infoport;
+        private string host;
 
         public static PortManager instance()
         {
@@ -31,12 +32,15 @@ namespace client.Model
             loginport = 11000;
 
             infoport = 9000; ///this should be const
+
+            host = "localhost";
         }
 
 
         public int Matchport { get { return matchport; } }
         public int Loginport { get { return loginport; } }
         public int Infoport { get { return infoport; } }
+        public string Host { get { return host; } }
     }
 }
 

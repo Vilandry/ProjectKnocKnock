@@ -28,6 +28,7 @@ namespace client
     public partial class MainWindow : Window
     {
         LoginController login;
+        PrivateChatController privatechat;
         User curUser;
         Popup errPopup;
 
@@ -36,9 +37,18 @@ namespace client
             string username = msg.MessageSender;
             string text = msg.Message;
 
-            string displayText = username + ": " + text;
+            string displayText = Utility.MessageFormatter(username,text);
+            Trace.WriteLine(displayText);
 
+            Paragraph paragraph = new Paragraph();
+            paragraph.Inlines.Add(new Run(displayText));
 
+            this.privateChatHistory.Document.Blocks.Add(paragraph);
+
+            this.privateChatHistory.Focus();
+            this.privateChatHistory.ScrollToEnd();
+
+            this.privateChatHistory.Document.Blocks.Add
         }
 
         public MainWindow()
@@ -46,16 +56,11 @@ namespace client
             InitializeComponent();
             curUser = new User();
             login = new LoginController();
+            privatechat = new PrivateChatController();
             this.privateChatHistory.IsReadOnly = true;
             errPopup = new Popup();
             hideButtons();         
         }
-
-        private void BeginSoloSearch(object sender, RoutedEventArgs e)
-        {
-            BeforeLogin.IsSelected = true;
-        }
-
 
         private void loginAttempt(Object sender, RoutedEventArgs e)
         {                
@@ -142,28 +147,35 @@ namespace client
         private void joinPrivateMatchQueue(Object sender, RoutedEventArgs e)
         {
 
-            string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)lookingForSex;
+            string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)curUser.LookingForSex;
         }
 
-        private void test(Object sender, RoutedEventArgs e)
+        private void BeginSoloSearch(object sender, RoutedEventArgs e)
         {
-            this.LoginNameBox.Text = "kooool";
+            BeforeLogin.IsSelected = true;
+            SEX temp = SEX.FEMALE;
+            privatechat.HandlePrivateChatting(curUser, temp);
         }
+
+
 
         private void displayButtons()
         {
-            this.groupChatButton.Visibility = System.Windows.Visibility.Visible;
-            this.soloSearchButton.Visibility = System.Windows.Visibility.Visible;
-            this.optionsButton.Visibility = System.Windows.Visibility.Visible;
-            this.logoutButton.Visibility = System.Windows.Visibility.Visible;
+            this.groupChatButton.Visibility = Visibility.Visible;
+            this.soloSearchButton.Visibility = Visibility.Visible;
+            this.optionsButton.Visibility = Visibility.Visible;
+            this.logoutButton.Visibility = Visibility.Visible;
         }
 
         private void hideButtons()
         {
-            this.groupChatButton.Visibility = System.Windows.Visibility.Hidden;
-            this.soloSearchButton.Visibility = System.Windows.Visibility.Hidden;
-            this.optionsButton.Visibility = System.Windows.Visibility.Hidden;
-            this.logoutButton.Visibility = System.Windows.Visibility.Hidden;
+            this.groupChatButton.Visibility = Visibility.Hidden;
+            this.soloSearchButton.Visibility = Visibility.Hidden;
+            this.optionsButton.Visibility = Visibility.Hidden;
+            this.logoutButton.Visibility = Visibility.Hidden;
         }
+
+
+
     }
 }

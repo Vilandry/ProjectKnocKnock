@@ -17,23 +17,21 @@ namespace client.Controller
     public class PrivateChatController
     {
         private TcpClient client;
-        private string hostname;
         private bool ongoingChat;
 
 
         public event EventHandler<MessageArrivedEventArgs> MessageArrived;
 
 
-        public PrivateChatController(string host)
+        public PrivateChatController()
         {
-            hostname = host;
             
         }
 
         public bool HandlePrivateChatting(User curUser, SEX LookingForSex)
         {
             bool success = false;
-            client = new TcpClient(hostname, PortManager.instance().Matchport);
+            client = new TcpClient(PortManager.instance().Host, PortManager.instance().Matchport);
             NetworkStream stream = client.GetStream();
 
             if ( !connectToPrivateChatQueue(curUser, LookingForSex))
@@ -53,7 +51,7 @@ namespace client.Controller
 
             try
             {
-                client.Connect(hostname, chatport);
+                client.Connect(PortManager.instance().Host, chatport);
 
                 Thread readingThread = new Thread(handleReading);
 
@@ -96,9 +94,18 @@ namespace client.Controller
 
         public void handeMessaging(string username, string message)
         {
-            string toBeSend = username + ": " + message;
-            byte[] buffer = new byte[1024];
-            int buffersize = 1024;
+            if(ongoingChat)
+            {
+                NetworkStream stream = client.GetStream();
+                string toBeSend = Utility.MessageFormatter(username, message);
+
+                byte[] buffer = System.Text.Encoding.ASCII.GetBytes(toBeSend);
+                stream.Write(buffer);
+            }
+            else
+            {
+                Trace.WriteLine("PrivateChat Warning: no ongoing chat!");
+            }
 
         }
 
@@ -118,7 +125,7 @@ namespace client.Controller
                     string raw_info = System.Text.Encoding.UTF8.GetString(buffer);
 
                     string sender = raw_info.Split("|", 2)[0];
-                    string msg = raw_info.Split("|", 2)[0];
+                    string msg = raw_info.Split("|", 2)[1];
                     MessageArrivedEventArgs e = new MessageArrivedEventArgs();
                     e.MessageSender = sender;
                     e.Message = msg;
@@ -146,6 +153,8 @@ namespace client.Controller
             }
 
         }
+
+
 
     }
 }

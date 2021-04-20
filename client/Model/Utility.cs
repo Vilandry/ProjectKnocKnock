@@ -25,6 +25,11 @@ namespace client.Model
                 return sb.ToString();
             }
         }
+
+        public static string MessageFormatter(string username, string message)
+        {
+            return username + ": " + message;
+        }
     }
 
     public class MessageArrivedEventArgs : EventArgs
