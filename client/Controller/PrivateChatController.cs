@@ -59,6 +59,7 @@ namespace client.Controller
 
                 readingThread.Start();
 
+
             }
             catch(Exception e)
             {
@@ -95,6 +96,9 @@ namespace client.Controller
 
         public void handeMessaging(string username, string message)
         {
+            string toBeSend = username + ": " + message;
+            byte[] buffer = new byte[1024];
+            int buffersize = 1024;
 
         }
 
@@ -102,7 +106,28 @@ namespace client.Controller
         {
             while(ongoingChat)
             {
+                NetworkStream stream = client.GetStream();
 
+                try
+                {
+                    byte[] buffer = new byte[1024];
+                    int buffersize = 1024;
+
+                    stream.Read(buffer, 0, 1024);
+
+                    string raw_info = System.Text.Encoding.UTF8.GetString(buffer);
+
+                    string sender = raw_info.Split("|", 2)[0];
+                    string msg = raw_info.Split("|", 2)[0];
+                    MessageArrivedEventArgs e = new MessageArrivedEventArgs();
+                    e.MessageSender = sender;
+                    e.Message = msg;
+                    OnMessageArrived(e);
+                }
+                catch(Exception e)
+                {
+                    Trace.WriteLine("Smth shit happened in private chat, event message: " + e.Message);
+                }
             }
         }
 
@@ -116,6 +141,8 @@ namespace client.Controller
             if(ongoingChat)
             {
                 string msg = "!LEAVE";
+                ongoingChat = false;
+                client.Close();
             }
 
         }
