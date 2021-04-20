@@ -79,9 +79,19 @@
 
             <TabItem Header="PrivateChat" Background="{x:Null}" Opacity="0.5" x:Name="PrivateChat">
                 <Grid>
-                    <TextBox x:Name="privateChatHistory" HorizontalAlignment="Left" Margin="77,10,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="1213" Height="607" IsReadOnly="True" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Visible"/>
+
+                    <RichTextBox x:Name="privateChatHistory" Margin="77,0,104,152" >
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="RichTextBox"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    
+                    
                     <TextBox x:Name="messageTextBox" HorizontalAlignment="Left" Margin="77,646,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="1114" Height="64"/>
                     <Button x:Name="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="1196,646,0,0" VerticalAlignment="Top" Height="64" Width="94" IsDefault="True"/>
+                    
 
                 </Grid>
             </TabItem>
@@ -93,6 +103,7 @@
             <TabItem Header="ChatGroupList" Background="{x:Null}" Opacity="0.5" x:Name="CurrentGroup">
 
             </TabItem>
+            
 
 
 

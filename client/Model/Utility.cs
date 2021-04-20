@@ -27,6 +27,22 @@ namespace client.Model
         }
     }
 
+    public class MessageArrivedEventArgs : EventArgs
+    {
+        private string msg;
+        private string msgsender;
+
+        /// <summary>
+        /// The text of the message
+        /// </summary>
+        public string Message { get { return msg; } set { msg = value; } }
+
+        /// <summary>
+        /// The username of the message's sender
+        /// </summary>
+        public string MessageSender { get { return msgsender; } set { msgsender = value; } }
+    }
+
     public enum AGECATEGORY
     {
         SIXTEEN,

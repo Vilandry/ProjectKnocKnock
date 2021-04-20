@@ -31,6 +31,16 @@ namespace client
         User curUser;
         Popup errPopup;
 
+        public void OnRandomChatMessageArrived(object sender, MessageArrivedEventArgs msg)
+        {
+            string username = msg.MessageSender;
+            string text = msg.Message;
+
+            string displayText = username + ": " + text;
+
+
+        }
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,8 +48,7 @@ namespace client
             login = new LoginController();
             this.privateChatHistory.IsReadOnly = true;
             errPopup = new Popup();
-            hideButtons();
-
+            hideButtons();         
         }
 
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
@@ -48,7 +57,7 @@ namespace client
         }
 
 
-        void loginAttempt(Object sender, RoutedEventArgs e)
+        private void loginAttempt(Object sender, RoutedEventArgs e)
         {                
             curUser.Username = LoginNameBox.Text;            
             string pwd = LoginPasswordBox.Password;              
@@ -75,7 +84,7 @@ namespace client
 
         }
 
-        void registerAttempt(Object sender, RoutedEventArgs e)
+        private void registerAttempt(Object sender, RoutedEventArgs e)
         {
             curUser.Username = SignupNameBox.Text;
             string pwd = SignupPasswordBox.Password;
@@ -130,18 +139,18 @@ namespace client
 
         }
 
-        void joinPrivateMatchQueue(Object sender, RoutedEventArgs e)
+        private void joinPrivateMatchQueue(Object sender, RoutedEventArgs e)
         {
 
             string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)lookingForSex;
         }
 
-        void test(Object sender, RoutedEventArgs e)
+        private void test(Object sender, RoutedEventArgs e)
         {
             this.LoginNameBox.Text = "kooool";
         }
 
-        void displayButtons()
+        private void displayButtons()
         {
             this.groupChatButton.Visibility = System.Windows.Visibility.Visible;
             this.soloSearchButton.Visibility = System.Windows.Visibility.Visible;
@@ -149,7 +158,7 @@ namespace client
             this.logoutButton.Visibility = System.Windows.Visibility.Visible;
         }
 
-        void hideButtons()
+        private void hideButtons()
         {
             this.groupChatButton.Visibility = System.Windows.Visibility.Hidden;
             this.soloSearchButton.Visibility = System.Windows.Visibility.Hidden;

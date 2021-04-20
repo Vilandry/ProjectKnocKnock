@@ -7,25 +7,72 @@ using System.Net.Sockets;
 using System.IO;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using System.Windows.Controls;
+using System.Threading;
 
 using client.Model;
 
 namespace client.Controller
 {
-    class PrivateChatController
+    public class PrivateChatController
     {
         private TcpClient client;
         private string hostname;
+        private bool ongoingChat;
+
+
+        public event EventHandler<MessageArrivedEventArgs> MessageArrived;
+
 
         public PrivateChatController(string host)
         {
             hostname = host;
+            
         }
 
-        public bool connectToPrivateChatQueue(User curUser, SEX LookingForSex)
+        public bool HandlePrivateChatting(User curUser, SEX LookingForSex)
         {
             bool success = false;
             client = new TcpClient(hostname, PortManager.instance().Matchport);
+            NetworkStream stream = client.GetStream();
+
+            if ( !connectToPrivateChatQueue(curUser, LookingForSex))
+            {
+                Trace.WriteLine("smth shit happened in the matchmaking connection");
+                return false;
+            }
+
+
+
+            int buffersize = 1024;
+            byte[] data = new byte[1024];
+            stream.Read(data, 0, buffersize);
+
+            string matchinfo = System.Text.Encoding.UTF8.GetString(data);
+            int chatport = int.Parse(matchinfo);
+
+            try
+            {
+                client.Connect(hostname, chatport);
+
+                Thread readingThread = new Thread(handleReading);
+
+                readingThread.Start();
+
+            }
+            catch(Exception e)
+            {
+                Trace.WriteLine("Chatconnecting shit happened. Error message: " + e.Message);
+            }
+
+            return success;
+        }
+
+        private bool connectToPrivateChatQueue(User curUser, SEX LookingForSex)
+        {
+            bool success = false;
+
+
             NetworkStream stream = client.GetStream();
 
             string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)LookingForSex;
@@ -46,9 +93,32 @@ namespace client.Controller
             return success;
         }
 
-        public void handeMessaging()
+        public void handeMessaging(string username, string message)
         {
 
         }
+
+        private void handleReading()
+        {
+            while(ongoingChat)
+            {
+
+            }
+        }
+
+        protected virtual void OnMessageArrived(MessageArrivedEventArgs e)
+        {
+            MessageArrived?.Invoke(this, e);
+        }
+
+        public void ExitChat()
+        {
+            if(ongoingChat)
+            {
+                string msg = "!LEAVE";
+            }
+
+        }
+
     }
 }

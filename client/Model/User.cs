@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace client.Model
 {
-    class User
+    public class User
     {
         private int userid;
         private AGECATEGORY agecat;
