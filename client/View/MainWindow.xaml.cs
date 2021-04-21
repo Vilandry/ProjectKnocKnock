@@ -43,12 +43,22 @@ namespace client
             Paragraph paragraph = new Paragraph();
             paragraph.Inlines.Add(new Run(displayText));
 
+            if(username==curUser.Username)
+            {
+                paragraph.TextAlignment = TextAlignment.Right;
+                paragraph.Foreground = Brushes.Orange;
+            }
+            else
+            {
+                paragraph.TextAlignment = TextAlignment.Left;
+                paragraph.Foreground = Brushes.Purple;
+            }
+
             this.privateChatHistory.Document.Blocks.Add(paragraph);
 
             this.privateChatHistory.Focus();
             this.privateChatHistory.ScrollToEnd();
 
-            this.privateChatHistory.Document.Blocks.Add
         }
 
         public MainWindow()
@@ -59,7 +69,8 @@ namespace client
             privatechat = new PrivateChatController();
             this.privateChatHistory.IsReadOnly = true;
             errPopup = new Popup();
-            hideButtons();         
+            hideButtons();
+            privatechat.MessageArrived += OnRandomChatMessageArrived;
         }
 
         private void loginAttempt(Object sender, RoutedEventArgs e)
@@ -97,29 +108,29 @@ namespace client
 
             if (this.ETTT.IsChecked == true) ///18-23
             {
-                curUser.AgeCategory = AGECATEGORY.TWENTY;
+                curUser.AgeCategory = AGECATEGORY.SEMI;
             }
             else if (this.oTT.IsChecked == true) ///23+
             {
-                curUser.AgeCategory = AGECATEGORY.TWENTYFIVEPLUS;
+                curUser.AgeCategory = AGECATEGORY.ADULT;
             }
             else if (this.uET.IsChecked == true) ///18-
             {
-                curUser.AgeCategory = AGECATEGORY.SIXTEEN;
+                curUser.AgeCategory = AGECATEGORY.YOUNG;
             }
 
 
             if (this.maleButton.IsChecked == true) ///18-23
             {
-                curUser.Gender = SEX.MALE;
+                curUser.Gender = GENDER.MALE;
             }
             else if (this.femaleButton.IsChecked == true) ///23+
             {
-                curUser.Gender = SEX.FEMALE;
+                curUser.Gender = GENDER.FEMALE;
             }
             else if (this.otherButton.IsChecked == true) ///18-
             {
-                curUser.Gender = SEX.OTHER;
+                curUser.Gender = GENDER.OTHER;
             }
 
 
@@ -146,15 +157,40 @@ namespace client
 
         private void joinPrivateMatchQueue(Object sender, RoutedEventArgs e)
         {
+            GENDER LookingForSex = GENDER.FEMALE;
+            if(this.lookingForFemale.IsChecked == true)
+            {
+                LookingForSex = GENDER.FEMALE;
+            }
+            else if(this.lookingForMale.IsChecked == true)
+            {
+                LookingForSex = GENDER.MALE;
+            }
+            else if(this.lookingForOther.IsChecked == true)
+            {
+                LookingForSex = GENDER.OTHER;
+            }
+            else if(this.lookingForAny.IsChecked == true)
+            {
+                LookingForSex = GENDER.ANY;
+            }
+            else
+            {
+                Trace.WriteLine("joinPrivateMatchQueue error: nothing was checked wtf");
+                return;
+            }
+            privatechat.HandlePrivateChatting(curUser, LookingForSex);
+        }
 
-            string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)curUser.LookingForSex;
+        private void sendPrivateMessage(object sender, RoutedEventArgs e)
+        {
+            string msg = this.messageTextBox.Text;
+            privatechat.handeMessaging(curUser.Username, msg);
         }
 
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
         {
             BeforeLogin.IsSelected = true;
-            SEX temp = SEX.FEMALE;
-            privatechat.HandlePrivateChatting(curUser, temp);
         }
 
 

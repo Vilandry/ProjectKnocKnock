@@ -22,18 +22,6 @@ namespace client.Controller
         {
             port = PortManager.instance().Loginport;
             client = new TcpClient();
-            /*try
-            {
-                hostname = "localhost";
-                port = 11000;
-                client = new TcpClient(hostname, port);
-                canAccess = true;
-                
-            }
-            catch
-            {
-                canAccess = false;
-            }*/
         }
 
         public bool Connected()
@@ -104,7 +92,7 @@ namespace client.Controller
 
                 /// Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
-                data = new Byte[256];
+                data = new Byte[1024];
 
                 /// String to store the response ASCII representation.
                 String responseData = String.Empty;
@@ -112,9 +100,15 @@ namespace client.Controller
                 /// Read the first batch of the TcpServer response bytes.
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                Trace.WriteLine("Received: " + responseData);
+                success = responseData.Split("|")[0] == "OK" ? 1 : 0;
 
-                success = responseData == "OK" ? 1 : 0;
-                Trace.WriteLine("Received: {0}", responseData);
+                if(success == 1)
+                {
+                    user.AgeCategory = (AGECATEGORY)int.Parse(responseData.Split("|")[1]);
+                    user.Gender = (GENDER)int.Parse(responseData.Split("|")[2]);
+                }
+
                 stream.Close();
 
                 return success;
@@ -154,8 +148,15 @@ namespace client.Controller
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
 
-                success = responseData == "OK" ? 1 : 0;
-                Trace.WriteLine("Received: {0}", responseData);
+                Trace.WriteLine("Received: " + responseData);
+                success = responseData.Split("|")[0] == "OK" ? 1 : 0;
+
+                if (success == 1)
+                {
+                    user.AgeCategory = (AGECATEGORY)int.Parse(responseData.Split("|")[1]);
+                    user.Gender = (GENDER)int.Parse(responseData.Split("|")[2]);
+                }
+
                 stream.Close();
 
 

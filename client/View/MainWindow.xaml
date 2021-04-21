@@ -71,8 +71,9 @@
                         </RadioButton.RenderTransform>
                     </RadioButton>
 
-                    <Button x:Name="joinPrivateMatchServer" Content="Give me a match!" Margin="99,681,110,10" Grid.Column="1"/>
+                    <Button x:Name="joinPrivateMatchServer" Click="joinPrivateMatchQueue" Content="GIVE ME A MATCH!" Margin="99,681,682,10" Grid.Column="1"/>
                     <TextBlock HorizontalAlignment="Left" Margin="102,364,0,0" Text="Aaaaand I'm looking for a..." TextWrapping="Wrap" VerticalAlignment="Top" Height="71" Width="688" FontFamily="Bahnschrift Light" Grid.Column="1" FontSize="48"/>
+                    <Button Content="GIVE ME MY ONLINE FRIENDS" Grid.Column="1" HorizontalAlignment="Left" Margin="845,681,0,0" VerticalAlignment="Top" Height="58" Width="482"/>
 
                 </Grid>
             </TabItem>
@@ -87,11 +88,11 @@
                             </Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    
-                    
+
+
                     <TextBox x:Name="messageTextBox" HorizontalAlignment="Left" Margin="77,646,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="1114" Height="64"/>
-                    <Button x:Name="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="1196,646,0,0" VerticalAlignment="Top" Height="64" Width="94" IsDefault="True"/>
-                    
+                    <Button x:Name="sendPrivateMessageButton" Click="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="1196,646,0,0" VerticalAlignment="Top" Height="64" Width="94" IsDefault="True"/>
+
 
                 </Grid>
             </TabItem>
@@ -103,7 +104,7 @@
             <TabItem Header="ChatGroupList" Background="{x:Null}" Opacity="0.5" x:Name="CurrentGroup">
 
             </TabItem>
-            
+
 
 
 
@@ -112,7 +113,7 @@
         </TabControl>
 
 
-        <Button x:Name="soloSearchButton" Content="" HorizontalAlignment="Left" Margin="7,10,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2" Click="BeginSoloSearch" BorderThickness="0,0,0,0">
+        <Button x:Name="soloSearchButton" Click="BeginSoloSearch"  Content="" HorizontalAlignment="Left" Margin="7,10,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2" BorderThickness="0,0,0,0">
             <Button.Background>
                 <ImageBrush ImageSource="/images/solo.png"/>
             </Button.Background>

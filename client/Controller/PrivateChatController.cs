@@ -28,7 +28,7 @@ namespace client.Controller
             
         }
 
-        public bool HandlePrivateChatting(User curUser, SEX LookingForSex)
+        public bool HandlePrivateChatting(User curUser, GENDER LookingForSex)
         {
             bool success = false;
             client = new TcpClient(PortManager.instance().Host, PortManager.instance().Matchport);
@@ -53,10 +53,7 @@ namespace client.Controller
             {
                 client.Connect(PortManager.instance().Host, chatport);
 
-                Thread readingThread = new Thread(handleReading);
-
-                readingThread.Start();
-
+                handleReading();
 
             }
             catch(Exception e)
@@ -67,7 +64,7 @@ namespace client.Controller
             return success;
         }
 
-        private bool connectToPrivateChatQueue(User curUser, SEX LookingForSex)
+        private bool connectToPrivateChatQueue(User curUser, GENDER LookingForSex)
         {
             bool success = false;
 
@@ -75,7 +72,6 @@ namespace client.Controller
             NetworkStream stream = client.GetStream();
 
             string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)LookingForSex;
-            Trace.WriteLine(msg);
 
             Byte[] data = System.Text.Encoding.ASCII.GetBytes(msg);            
             stream.Write(data, 0, data.Length);
@@ -85,9 +81,9 @@ namespace client.Controller
             // Read the first batch of the TcpServer response bytes.
             stream.Read(data, 0, data.Length);
             responseData = System.Text.Encoding.ASCII.GetString(data);
-            Trace.WriteLine("Received from matchserver: {0}", responseData);
+            Trace.WriteLine("Received from matchserver: " + responseData);
 
-            success = (responseData == "ok");
+            success = (responseData == "OK");
 
             return success;
         }
@@ -96,6 +92,11 @@ namespace client.Controller
         {
             if(ongoingChat)
             {
+                if(message == "")
+                {
+                    Trace.WriteLine("PrivateChat Warning: empty message");
+                    return;
+                }
                 NetworkStream stream = client.GetStream();
                 string toBeSend = Utility.MessageFormatter(username, message);
 

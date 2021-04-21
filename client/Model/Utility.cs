@@ -50,16 +50,17 @@ namespace client.Model
 
     public enum AGECATEGORY
     {
-        SIXTEEN,
-        TWENTY,
-        TWENTYFIVEPLUS
+        YOUNG = 0,
+        SEMI = 1,
+        ADULT = 2
     }
 
 
-    public enum SEX
+    public enum GENDER
     {
-        FEMALE,
-        MALE,
-        OTHER
+        FEMALE = 0,
+        MALE = 1,
+        OTHER = 2,
+        ANY = 3
     }
 }

@@ -12,7 +12,7 @@ namespace client.Model
     {
         private int userid;
         private AGECATEGORY agecat;
-        private SEX gender;
+        private GENDER gender;
         private String username;
         private List<int> friendIDList;
         private bool hasOngoingChat;
@@ -25,7 +25,7 @@ namespace client.Model
 
         public AGECATEGORY AgeCategory { get { return agecat; } set { agecat = value; } }
 
-        public SEX Gender { get { return gender; } set { gender = value; } }
+        public GENDER Gender { get { return gender; } set { gender = value; } }
 
         //public SEX LookingForSex { get { return lookingforsex; } set { lookingforsex = value; } }
 
