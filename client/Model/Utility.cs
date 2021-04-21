@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net.Sockets;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace client.Model
 {
@@ -29,6 +31,25 @@ namespace client.Model
         public static string MessageFormatter(string username, string message)
         {
             return username + ": " + message;
+        }
+
+        public static string ReadFromNetworkStream(NetworkStream stream)
+        {
+            byte[] bytes = new Byte[256];
+            string message = null;
+            int i = 0, byteCount = 0;
+            do
+            {
+                i = stream.Read(bytes, 0, bytes.Length);
+                Console.WriteLine(i);
+                // Translate data bytes to a ASCII string.
+                message = System.Text.Encoding.ASCII.GetString(bytes, byteCount, i);
+                byteCount += i;
+            } while (stream.DataAvailable);
+            Trace.WriteLine("\nUTILITY: read from networkstream: " + message + "\n");
+            
+
+            return message;
         }
     }
 

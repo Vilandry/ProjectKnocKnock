@@ -15,7 +15,6 @@ namespace client.Controller
     class LoginController
     {
         private TcpClient client;
-        private bool canAccess;
         private int port;
 
         public LoginController()
@@ -84,23 +83,24 @@ namespace client.Controller
 
                 
                 string message = "LOGIN" + "|" + user.Username + "|" + Utility.CreateMD5(pwd);
-
+                Trace.WriteLine("Login attempt with this data: " + message);
                 /// Translate the passed message into ASCII and store it as a Byte array.
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
 
                 NetworkStream stream = client.GetStream();
 
                 /// Send the message to the connected TcpServer.
                 stream.Write(data, 0, data.Length);
-                data = new Byte[1024];
+                data = new byte[1024];
 
                 /// String to store the response ASCII representation.
                 String responseData = String.Empty;
 
                 /// Read the first batch of the TcpServer response bytes.
+                data = new byte[1024];
                 Int32 bytes = stream.Read(data, 0, data.Length);
                 responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
-                Trace.WriteLine("Received: " + responseData);
+                Trace.WriteLine("Received from loginserver: " + responseData);
                 success = responseData.Split("|")[0] == "OK" ? 1 : 0;
 
                 if(success == 1)

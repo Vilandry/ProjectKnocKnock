@@ -16,6 +16,7 @@ namespace client.Model
         private String username;
         private List<int> friendIDList;
         private bool hasOngoingChat;
+        private bool hasOngoingChatSearch;
 
         //private SEX lookingforsex;
 
@@ -34,6 +35,7 @@ namespace client.Model
         public List<int> FriendIDList { get { return friendIDList; } }
 
         public bool HasOngoingChat { get { return hasOngoingChat; } set { hasOngoingChat = value; } }
+        public bool HasOngoingChatSearch { get { return hasOngoingChatSearch; } set { hasOngoingChatSearch = value; } }
     }
 
 

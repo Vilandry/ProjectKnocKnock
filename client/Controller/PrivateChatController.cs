@@ -36,29 +36,42 @@ namespace client.Controller
 
             if ( !connectToPrivateChatQueue(curUser, LookingForSex))
             {
-                Trace.WriteLine("smth shit happened in the matchmaking connection");
+                Trace.WriteLine("Chatconnecting error at phase 1");
                 return false;
             }
 
-
-
-            int buffersize = 1024;
-            byte[] data = new byte[1024];
-            stream.Read(data, 0, buffersize);
-
-            string matchinfo = System.Text.Encoding.UTF8.GetString(data);
-            int chatport = int.Parse(matchinfo);
-
             try
             {
-                client.Connect(PortManager.instance().Host, chatport);
+                while(true)
+                {
+                    Thread.Sleep(300);
+                    Trace.WriteLine("PrivateChat: get matchport...");
+                    string matchinfo = Utility.ReadFromNetworkStream(stream);
+                    int chatport = int.Parse(matchinfo);
 
-                handleReading();
+                    Trace.WriteLine("PrivateChat: trying to verify...");
+                    string verify = Utility.ReadFromNetworkStream(stream);
+                    if (verify == "OK")
+                    {
+                        Trace.WriteLine("PrivateChat: verified!");
+                        curUser.HasOngoingChat = true;
+                        ongoingChat = true;
 
+                        client = new TcpClient(PortManager.instance().Host, chatport);
+                        Console.Beep();                        
+                        Thread t = new Thread(handleReading);
+                        t.Start();
+                        break;
+                    }
+                    else
+                    {
+                        Trace.WriteLine("Failed matchmaking attempt.");
+                    }
+                }                
             }
             catch(Exception e)
             {
-                Trace.WriteLine("Chatconnecting shit happened. Error message: " + e.Message);
+                Trace.WriteLine("Chatconnecting error at phase 2. Error message: " + e.Message);
             }
 
             return success;
@@ -67,23 +80,27 @@ namespace client.Controller
         private bool connectToPrivateChatQueue(User curUser, GENDER LookingForSex)
         {
             bool success = false;
+            try
+            {
+                NetworkStream stream = client.GetStream();
+                string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)LookingForSex;
+
+                byte[] data = System.Text.Encoding.ASCII.GetBytes(msg);
+                stream.Write(data, 0, data.Length);
+
+                string responseData = Utility.ReadFromNetworkStream(stream);
+
+                Trace.WriteLine("\nReceived from matchserver: " + responseData + "\n");
+
+                success = (responseData == "OK");
+            }
+            catch(Exception e)
+            {
+                Trace.WriteLine("Error during privatechat connection: " + e.Message);
+            }
 
 
-            NetworkStream stream = client.GetStream();
 
-            string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)LookingForSex;
-
-            Byte[] data = System.Text.Encoding.ASCII.GetBytes(msg);            
-            stream.Write(data, 0, data.Length);
-
-            String responseData = String.Empty;
-
-            // Read the first batch of the TcpServer response bytes.
-            stream.Read(data, 0, data.Length);
-            responseData = System.Text.Encoding.ASCII.GetString(data);
-            Trace.WriteLine("Received from matchserver: " + responseData);
-
-            success = (responseData == "OK");
 
             return success;
         }
@@ -98,7 +115,8 @@ namespace client.Controller
                     return;
                 }
                 NetworkStream stream = client.GetStream();
-                string toBeSend = Utility.MessageFormatter(username, message);
+                string toBeSend = username + "|" + message;
+                Trace.WriteLine("Privatechat message sent: " + message);
 
                 byte[] buffer = System.Text.Encoding.ASCII.GetBytes(toBeSend);
                 stream.Write(buffer);
@@ -118,12 +136,7 @@ namespace client.Controller
 
                 try
                 {
-                    byte[] buffer = new byte[1024];
-                    int buffersize = 1024;
-
-                    stream.Read(buffer, 0, 1024);
-
-                    string raw_info = System.Text.Encoding.UTF8.GetString(buffer);
+                    string raw_info = Utility.ReadFromNetworkStream(stream);
 
                     string sender = raw_info.Split("|", 2)[0];
                     string msg = raw_info.Split("|", 2)[1];
@@ -134,7 +147,7 @@ namespace client.Controller
                 }
                 catch(Exception e)
                 {
-                    Trace.WriteLine("Smth shit happened in private chat, event message: " + e.Message);
+                    Trace.WriteLine("Smth shit happened in private chat, error message: " + e.Message);
                 }
             }
         }
@@ -144,13 +157,15 @@ namespace client.Controller
             MessageArrived?.Invoke(this, e);
         }
 
-        public void ExitChat()
+        public void ExitChat(User curUser)
         {
             if(ongoingChat)
             {
                 string msg = "!LEAVE";
                 ongoingChat = false;
                 client.Close();
+
+                curUser.HasOngoingChat = false;
             }
 
         }

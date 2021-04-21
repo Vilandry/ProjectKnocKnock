@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Security.Cryptography;
 using System.Diagnostics;
 using System.Windows.Controls.Primitives;
+using System.Threading;
 
 using client.View;
 using client.Model;
@@ -34,30 +35,35 @@ namespace client
 
         public void OnRandomChatMessageArrived(object sender, MessageArrivedEventArgs msg)
         {
+            Console.Beep();
             string username = msg.MessageSender;
             string text = msg.Message;
 
             string displayText = Utility.MessageFormatter(username,text);
             Trace.WriteLine(displayText);
 
-            Paragraph paragraph = new Paragraph();
-            paragraph.Inlines.Add(new Run(displayText));
-
-            if(username==curUser.Username)
+            this.Dispatcher.Invoke(() =>
             {
-                paragraph.TextAlignment = TextAlignment.Right;
-                paragraph.Foreground = Brushes.Orange;
-            }
-            else
-            {
-                paragraph.TextAlignment = TextAlignment.Left;
-                paragraph.Foreground = Brushes.Purple;
-            }
+                Paragraph paragraph = new Paragraph();
+                paragraph.Inlines.Add(new Run(displayText));
 
-            this.privateChatHistory.Document.Blocks.Add(paragraph);
+                if (username == curUser.Username)
+                {
+                    paragraph.TextAlignment = TextAlignment.Right;
+                    paragraph.Foreground = Brushes.Orange;
+                }
+                else
+                {
+                    paragraph.TextAlignment = TextAlignment.Left;
+                    paragraph.Foreground = Brushes.Purple;
+                }
 
-            this.privateChatHistory.Focus();
-            this.privateChatHistory.ScrollToEnd();
+                this.privateChatHistory.Document.Blocks.Add(paragraph);
+
+                this.privateChatHistory.Focus();
+                this.privateChatHistory.ScrollToEnd();
+            });
+
 
         }
 
@@ -71,14 +77,14 @@ namespace client
             errPopup = new Popup();
             hideButtons();
             privatechat.MessageArrived += OnRandomChatMessageArrived;
+            curUser.HasOngoingChat = false;
+            curUser.HasOngoingChatSearch = false;
         }
 
         private void loginAttempt(Object sender, RoutedEventArgs e)
         {                
             curUser.Username = LoginNameBox.Text;            
-            string pwd = LoginPasswordBox.Password;              
-            Trace.WriteLine("\n\n\n" + Utility.CreateMD5(pwd) + "\n\n\n");
-                
+            string pwd = LoginPasswordBox.Password;                              
             int success = login.tryLogin(curUser, pwd);                
 
                 
@@ -179,13 +185,26 @@ namespace client
                 Trace.WriteLine("joinPrivateMatchQueue error: nothing was checked wtf");
                 return;
             }
-            privatechat.HandlePrivateChatting(curUser, LookingForSex);
+
+            if(curUser.HasOngoingChatSearch || curUser.HasOngoingChat)
+            {
+                
+            }
+            else
+            {
+                Thread t = new Thread((_) => { privatechat.HandlePrivateChatting(curUser, LookingForSex); });
+                t.Start();
+                curUser.HasOngoingChatSearch = true;
+            }
+
         }
 
         private void sendPrivateMessage(object sender, RoutedEventArgs e)
         {
+
             string msg = this.messageTextBox.Text;
             privatechat.handeMessaging(curUser.Username, msg);
+            messageTextBox.Text = "";
         }
 
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
