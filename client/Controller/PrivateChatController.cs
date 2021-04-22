@@ -44,13 +44,20 @@ namespace client.Controller
             {
                 while(true)
                 {
-                    Thread.Sleep(300);
                     Trace.WriteLine("PrivateChat: get matchport...");
                     string matchinfo = Utility.ReadFromNetworkStream(stream);
                     int chatport = int.Parse(matchinfo);
 
+                    if(!curUser.HasOngoingChatSearch)
+                    {
+                        client.GetStream().Close();
+                        client.Close();
+                        return false;
+                    }
+
                     Trace.WriteLine("PrivateChat: trying to verify...");
                     string verify = Utility.ReadFromNetworkStream(stream);
+
                     if (verify == "OK")
                     {
                         Trace.WriteLine("PrivateChat: verified!");
@@ -84,8 +91,16 @@ namespace client.Controller
             {
                 NetworkStream stream = client.GetStream();
                 string msg = curUser.Username + "|" + (int)curUser.AgeCategory + "|" + (int)curUser.Gender + "|" + (int)LookingForSex;
+                Trace.WriteLine(msg);
 
-                byte[] data = System.Text.Encoding.ASCII.GetBytes(msg);
+                if (!curUser.HasOngoingChatSearch)
+                {
+                    client.GetStream().Close();
+                    client.Close();
+                    return false;
+                }
+
+                byte[] data = Encoding.Unicode.GetBytes(msg);
                 stream.Write(data, 0, data.Length);
 
                 string responseData = Utility.ReadFromNetworkStream(stream);
@@ -118,7 +133,7 @@ namespace client.Controller
                 string toBeSend = username + "|" + message;
                 Trace.WriteLine("Privatechat message sent: " + message);
 
-                byte[] buffer = System.Text.Encoding.ASCII.GetBytes(toBeSend);
+                byte[] buffer = Encoding.Unicode.GetBytes(toBeSend);
                 stream.Write(buffer);
             }
             else
@@ -159,10 +174,17 @@ namespace client.Controller
 
         public void ExitChat(User curUser)
         {
-            if(ongoingChat)
-            {
-                string msg = "!LEAVE";
+            if(curUser.HasOngoingChat || curUser.HasOngoingChatSearch)
+            {               
+                //client.Connect(PortManager.instance().Host, PortManager.instance().Matchport);
+                NetworkStream stream = client.GetStream();
+                string msg = "!LEAVE|" + curUser.Username;
+                byte[] buffer = Encoding.Unicode.GetBytes(msg);
+                stream.Write(buffer);
+                Trace.WriteLine(msg + " sent!");
+
                 ongoingChat = false;
+                client.GetStream().Close();
                 client.Close();
 
                 curUser.HasOngoingChat = false;

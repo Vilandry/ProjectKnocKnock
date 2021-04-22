@@ -17,6 +17,12 @@ namespace client
     /// </summary>
     public partial class App : Application
     {
-        
+        private void Shutdown(object sender, ExitEventArgs e)
+        {
+
+        }
     }
+
+
+
 }

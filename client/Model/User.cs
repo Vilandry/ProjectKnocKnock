@@ -15,8 +15,8 @@ namespace client.Model
         private GENDER gender;
         private String username;
         private List<int> friendIDList;
-        private bool hasOngoingChat;
-        private bool hasOngoingChatSearch;
+        private volatile bool hasOngoingChat;
+        private volatile bool hasOngoingChatSearch;
 
         //private SEX lookingforsex;
 

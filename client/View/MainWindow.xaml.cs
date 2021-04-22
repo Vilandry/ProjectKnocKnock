@@ -164,19 +164,19 @@ namespace client
         private void joinPrivateMatchQueue(Object sender, RoutedEventArgs e)
         {
             GENDER LookingForSex = GENDER.FEMALE;
-            if(this.lookingForFemale.IsChecked == true)
+            if (this.lookingForFemale.IsChecked == true)
             {
                 LookingForSex = GENDER.FEMALE;
             }
-            else if(this.lookingForMale.IsChecked == true)
+            else if (this.lookingForMale.IsChecked == true)
             {
                 LookingForSex = GENDER.MALE;
             }
-            else if(this.lookingForOther.IsChecked == true)
+            else if (this.lookingForOther.IsChecked == true)
             {
                 LookingForSex = GENDER.OTHER;
             }
-            else if(this.lookingForAny.IsChecked == true)
+            else if (this.lookingForAny.IsChecked == true)
             {
                 LookingForSex = GENDER.ANY;
             }
@@ -186,15 +186,30 @@ namespace client
                 return;
             }
 
-            if(curUser.HasOngoingChatSearch || curUser.HasOngoingChat)
+            Thread t = new Thread(
+                (_) => {
+                if (!privatechat.HandlePrivateChatting(curUser, LookingForSex))
+                {
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
+                    });
+                    
+                }
+            });
+
+            if (curUser.HasOngoingChatSearch || curUser.HasOngoingChat)
             {
-                
+                this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
+                privatechat.ExitChat(curUser);
+                curUser.HasOngoingChatSearch = false;
+                curUser.HasOngoingChat = false;
             }
             else
             {
-                Thread t = new Thread((_) => { privatechat.HandlePrivateChatting(curUser, LookingForSex); });
-                t.Start();
                 curUser.HasOngoingChatSearch = true;
+                t.Start();
+                this.joinPrivateMatchServer.Content = "Stop searching";
             }
 
         }
@@ -230,7 +245,10 @@ namespace client
             this.logoutButton.Visibility = Visibility.Hidden;
         }
 
-
+        private void Shutdown(object sender, EventArgs e)
+        {
+            privatechat.ExitChat(curUser);
+        }
 
     }
 }

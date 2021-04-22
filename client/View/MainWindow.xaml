@@ -4,7 +4,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="MainWindow" Height="803" Width="1522">
+        Title="MainWindow" Height="803" Width="1522"
+        Closing="Shutdown"
+        >
+    
     <Grid>
 
 
@@ -42,10 +45,6 @@
 
             <TabItem Header="MainMenu" Background="{x:Null}" Opacity="0.5" x:Name="MainMenu">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="31*"/>
-                        <ColumnDefinition Width="1363*"/>
-                    </Grid.ColumnDefinitions>
 
                     <RadioButton x:Name="lookingForFemale" Content="Female." Margin="99,435,1085,300" IsChecked="True" GroupName="lookingfor" Grid.Column="1" FontFamily="Bahnschrift Light">
                         <RadioButton.RenderTransform>

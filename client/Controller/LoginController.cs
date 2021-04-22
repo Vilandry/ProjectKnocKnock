@@ -84,8 +84,8 @@ namespace client.Controller
                 
                 string message = "LOGIN" + "|" + user.Username + "|" + Utility.CreateMD5(pwd);
                 Trace.WriteLine("Login attempt with this data: " + message);
-                /// Translate the passed message into ASCII and store it as a Byte array.
-                byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+
+                byte[] data = Encoding.Unicode.GetBytes(message);
 
                 NetworkStream stream = client.GetStream();
 
@@ -93,13 +93,12 @@ namespace client.Controller
                 stream.Write(data, 0, data.Length);
                 data = new byte[1024];
 
-                /// String to store the response ASCII representation.
                 String responseData = String.Empty;
 
                 /// Read the first batch of the TcpServer response bytes.
                 data = new byte[1024];
                 Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                responseData = Encoding.Unicode.GetString(data, 0, bytes);
                 Trace.WriteLine("Received from loginserver: " + responseData);
                 success = responseData.Split("|")[0] == "OK" ? 1 : 0;
 
@@ -135,7 +134,7 @@ namespace client.Controller
 
 
                 string message = "REGISTER" + "|" + user.Username + "|" + Utility.CreateMD5(pwd) + "|" + (int)user.AgeCategory + "|" + (int)user.Gender;
-                Byte[] data = System.Text.Encoding.ASCII.GetBytes(message);
+                Byte[] data = Encoding.Unicode.GetBytes(message);
 
 
                 NetworkStream stream = client.GetStream();
@@ -146,7 +145,7 @@ namespace client.Controller
                 String responseData = String.Empty;
 
                 Int32 bytes = stream.Read(data, 0, data.Length);
-                responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+                responseData = Encoding.Unicode.GetString(data, 0, bytes);
 
                 Trace.WriteLine("Received: " + responseData);
                 success = responseData.Split("|")[0] == "OK" ? 1 : 0;

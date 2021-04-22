@@ -43,7 +43,7 @@ namespace client.Model
                 i = stream.Read(bytes, 0, bytes.Length);
                 Console.WriteLine(i);
                 // Translate data bytes to a ASCII string.
-                message = System.Text.Encoding.ASCII.GetString(bytes, byteCount, i);
+                message = Encoding.Unicode.GetString(bytes, byteCount, i);
                 byteCount += i;
             } while (stream.DataAvailable);
             Trace.WriteLine("\nUTILITY: read from networkstream: " + message + "\n");
