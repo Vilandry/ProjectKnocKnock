@@ -30,13 +30,18 @@ namespace client
     {
         LoginController login;
         PrivateChatController privatechat;
-        User curUser;
+        volatile User curUser;
         Popup errPopup;
 
         public void OnRandomChatMessageArrived(object sender, MessageArrivedEventArgs msg)
-        {
-            Console.Beep();
+        {            
             string username = msg.MessageSender;
+
+            if(username != curUser.Username)
+            {
+                Console.Beep();
+            }
+
             string text = msg.Message;
 
             string displayText = Utility.MessageFormatter(username,text);
@@ -63,23 +68,58 @@ namespace client
                 this.privateChatHistory.Focus();
                 this.privateChatHistory.ScrollToEnd();
             });
-
-
         }
+
+        public void OnChatEnded(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                this.saveButton.Visibility = Visibility.Visible;
+                this.addFriendButton.Visibility = Visibility.Visible;
+
+                this.leaveButton.IsEnabled = false;
+                this.sendPrivateMessageButton.IsEnabled = false;
+            });           
+        }
+
+        public void OnChatBegins(object sender, EventArgs e)
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                privateChatHistory.Document.Blocks.Clear();
+                Console.Beep();
+                this.PrivateChat.IsSelected = true;
+                this.saveButton.Visibility = Visibility.Hidden;
+                this.addFriendButton.Visibility = Visibility.Hidden;
+                this.leaveButton.Visibility = Visibility.Visible;
+                this.sendPrivateMessageButton.Visibility = Visibility.Visible;
+
+                this.leaveButton.IsEnabled = true;
+                this.sendPrivateMessageButton.IsEnabled = true;
+            });            
+        }
+
 
         public MainWindow()
         {
             InitializeComponent();
             curUser = new User();
             login = new LoginController();
-            privatechat = new PrivateChatController();
+            privatechat = new PrivateChatController(curUser);
             this.privateChatHistory.IsReadOnly = true;
             errPopup = new Popup();
             hideButtons();
-            privatechat.MessageArrived += OnRandomChatMessageArrived;
+
+            privateChatHistory.Document.Blocks.Clear();
+            
             curUser.HasOngoingChat = false;
             curUser.HasOngoingChatSearch = false;
+
+            privatechat.chatBegins += OnChatBegins;
+            privatechat.MessageArrived += OnRandomChatMessageArrived;
+            privatechat.chatEnded += OnChatEnded;
         }
+
 
         private void loginAttempt(Object sender, RoutedEventArgs e)
         {                
@@ -188,7 +228,7 @@ namespace client
 
             Thread t = new Thread(
                 (_) => {
-                if (!privatechat.HandlePrivateChatting(curUser, LookingForSex))
+                if (!privatechat.HandlePrivateChatting(LookingForSex))
                 {
                     this.Dispatcher.Invoke(() =>
                     {
@@ -201,7 +241,7 @@ namespace client
             if (curUser.HasOngoingChatSearch || curUser.HasOngoingChat)
             {
                 this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
-                privatechat.ExitChat(curUser);
+                privatechat.ExitChat();
                 curUser.HasOngoingChatSearch = false;
                 curUser.HasOngoingChat = false;
             }
@@ -247,8 +287,14 @@ namespace client
 
         private void Shutdown(object sender, EventArgs e)
         {
-            privatechat.ExitChat(curUser);
+            privatechat.ExitChat();
         }
 
+        private void SaveMessageHistory(object sender, EventArgs e)
+        {
+            TextRange range = new TextRange(this.privateChatHistory.Document.ContentStart, this.privateChatHistory.Document.ContentEnd);
+
+            string history = range.Text;
+        }
     }
 }

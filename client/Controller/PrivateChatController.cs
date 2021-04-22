@@ -17,24 +17,25 @@ namespace client.Controller
     public class PrivateChatController
     {
         private TcpClient client;
-        private bool ongoingChat;
-
+        volatile User curUser;
 
         public event EventHandler<MessageArrivedEventArgs> MessageArrived;
+        public event EventHandler chatEnded;
+        public event EventHandler chatBegins;
 
 
-        public PrivateChatController()
+        public PrivateChatController(User cu)
         {
-            
+            curUser = cu;
         }
 
-        public bool HandlePrivateChatting(User curUser, GENDER LookingForSex)
+        public bool HandlePrivateChatting(GENDER LookingForSex)
         {
             bool success = false;
             client = new TcpClient(PortManager.instance().Host, PortManager.instance().Matchport);
             NetworkStream stream = client.GetStream();
 
-            if ( !connectToPrivateChatQueue(curUser, LookingForSex))
+            if ( !connectToPrivateChatQueue(LookingForSex))
             {
                 Trace.WriteLine("Chatconnecting error at phase 1");
                 return false;
@@ -62,10 +63,13 @@ namespace client.Controller
                     {
                         Trace.WriteLine("PrivateChat: verified!");
                         curUser.HasOngoingChat = true;
-                        ongoingChat = true;
 
                         client = new TcpClient(PortManager.instance().Host, chatport);
-                        Console.Beep();                        
+
+
+                        EventArgs e = new EventArgs();
+                        OnChatBegins(e);
+                        
                         Thread t = new Thread(handleReading);
                         t.Start();
                         break;
@@ -84,7 +88,7 @@ namespace client.Controller
             return success;
         }
 
-        private bool connectToPrivateChatQueue(User curUser, GENDER LookingForSex)
+        private bool connectToPrivateChatQueue(GENDER LookingForSex)
         {
             bool success = false;
             try
@@ -122,7 +126,7 @@ namespace client.Controller
 
         public void handeMessaging(string username, string message)
         {
-            if(ongoingChat)
+            if(curUser.HasOngoingChat)
             {
                 if(message == "")
                 {
@@ -145,16 +149,21 @@ namespace client.Controller
 
         private void handleReading()
         {
-            while(ongoingChat)
+            while(curUser.HasOngoingChat)
             {
                 NetworkStream stream = client.GetStream();
 
                 try
                 {
                     string raw_info = Utility.ReadFromNetworkStream(stream);
+ 
 
                     string sender = raw_info.Split("|", 2)[0];
                     string msg = raw_info.Split("|", 2)[1];
+                    if(sender == "SERVER")
+                    {
+                        handleCommands(raw_info);
+                    }
                     MessageArrivedEventArgs e = new MessageArrivedEventArgs();
                     e.MessageSender = sender;
                     e.Message = msg;
@@ -172,22 +181,60 @@ namespace client.Controller
             MessageArrived?.Invoke(this, e);
         }
 
-        public void ExitChat(User curUser)
+        protected virtual void OnChatBegins(EventArgs e)
         {
+            chatBegins?.Invoke(this, e);
+        }
+
+        protected virtual void OnChatEnded(EventArgs e)
+        {
+            chatEnded?.Invoke(this, e);
+        }
+
+        private void handleCommands(string command)
+        {
+            string[] commandargs = command.Split("|");
+
+            if(commandargs[1] == "!LEFT")
+            {
+                ExitChat();
+            }
+            else
+            {
+                Trace.WriteLine("Unknown command: " + command);
+            }
+        }
+
+        public void ExitChat()
+        {
+            if(client == null)
+            {
+                return;
+            }
             if(curUser.HasOngoingChat || curUser.HasOngoingChatSearch)
             {               
                 //client.Connect(PortManager.instance().Host, PortManager.instance().Matchport);
-                NetworkStream stream = client.GetStream();
-                string msg = "!LEAVE|" + curUser.Username;
-                byte[] buffer = Encoding.Unicode.GetBytes(msg);
-                stream.Write(buffer);
-                Trace.WriteLine(msg + " sent!");
+                try
+                {
+                    NetworkStream stream = client.GetStream();
+                    string msg = "!LEAVE|" + curUser.Username;
+                    byte[] buffer = Encoding.Unicode.GetBytes(msg);
+                    stream.Write(buffer);
+                    Trace.WriteLine(msg + " sent!");
+                }
+                catch(Exception e)
+                {
+                    Trace.WriteLine("exiting with error");
+                }
+                finally
+                {
+                    client.Close();
 
-                ongoingChat = false;
-                client.GetStream().Close();
-                client.Close();
+                    curUser.HasOngoingChat = false;
 
-                curUser.HasOngoingChat = false;
+                    EventArgs e = new EventArgs();
+                    OnChatEnded(e);
+                }              
             }
 
         }

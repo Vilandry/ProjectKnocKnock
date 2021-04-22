@@ -30,7 +30,20 @@ namespace client.Model
 
         public static string MessageFormatter(string username, string message)
         {
-            return username + ": " + message;
+            if(username == "SERVER")
+            {
+                string[] commandargs = message.Split("|");
+                if(commandargs[0] == "LEFT")
+                {
+                    return commandargs[1] + " has disconnected!";
+                }
+
+                return "error?";
+            }
+            else
+            {
+                return username + ": " + message;
+            }          
         }
 
         public static string ReadFromNetworkStream(NetworkStream stream)
@@ -83,5 +96,12 @@ namespace client.Model
         MALE = 1,
         OTHER = 2,
         ANY = 3
+    }
+
+    public enum CHATTYPE
+    {
+        PRIVATECHAT = 0,
+        GROUPCHAT = 1,
+        FRIENDLYCHAT = 2
     }
 }

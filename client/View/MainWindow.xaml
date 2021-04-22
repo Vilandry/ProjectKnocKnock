@@ -7,7 +7,7 @@
         Title="MainWindow" Height="803" Width="1522"
         Closing="Shutdown"
         >
-    
+
     <Grid>
 
 
@@ -89,8 +89,11 @@
                     </RichTextBox>
 
 
-                    <TextBox x:Name="messageTextBox" HorizontalAlignment="Left" Margin="77,646,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="1114" Height="64"/>
-                    <Button x:Name="sendPrivateMessageButton" Click="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="1196,646,0,0" VerticalAlignment="Top" Height="64" Width="94" IsDefault="True"/>
+                    <TextBox x:Name="messageTextBox" HorizontalAlignment="Left" Margin="77,646,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="607" Height="64"/>
+                    <Button x:Name="sendPrivateMessageButton" Click="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="697,646,0,0" VerticalAlignment="Top" Height="64" Width="64" IsDefault="True"/>
+                    <Button x:Name="leaveButton" Click="Shutdown" Content="Leave" HorizontalAlignment="Left" Margin="1226,646,0,0" VerticalAlignment="Top" Width="64" Height="64"/>
+                    <Button x:Name="saveButton" Content="Save" HorizontalAlignment="Left" Margin="889,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
+                    <Button x:Name="addFriendButton" Content="Add as friend!" HorizontalAlignment="Left" Margin="1017,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
 
 
                 </Grid>

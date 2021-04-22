@@ -13,7 +13,9 @@ namespace client.Model
         private int matchport;
         private int loginport;
         private int infoport;
+        private int miscport;
         private string host;
+
 
         public static PortManager instance()
         {
@@ -41,6 +43,7 @@ namespace client.Model
         public int Loginport { get { return loginport; } }
         public int Infoport { get { return infoport; } }
         public string Host { get { return host; } }
+        public int Miscport { get { return miscport; } }
     }
 }
 

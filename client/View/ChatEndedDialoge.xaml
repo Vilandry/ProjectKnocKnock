@@ -1,0 +1,18 @@
+﻿<Window x:Class="client.View.ChatEndedDialoge"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:client.View"
+        mc:Ignorable="d"
+        Title="ChatEndedDialoge" Height="450" Width="800"
+        Closing="OnWindowClose"
+        >
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Margin="57,98,0,0" Text="dummmyyyyy" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Bahnschrift Light Condensed" FontSize="30" Height="96" Width="679"/>
+        <Button Content="Save chat history!" HorizontalAlignment="Left" Margin="57,217,0,0" VerticalAlignment="Top" Height="74" Width="263"/>
+        <Button x:Name="addFriend" Content="Add as friend! Maybe they add you too ;)" HorizontalAlignment="Left" Margin="57,325,0,0" VerticalAlignment="Top" Height="74" Width="263"/>
+        <TextBlock HorizontalAlignment="Left" Margin="400,218,0,0" Text="What should we do now?" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Bahnschrift Light Condensed" FontSize="30" Height="31" Width="336"/>
+
+    </Grid>
+</Window>
