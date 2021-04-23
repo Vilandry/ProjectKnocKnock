@@ -33,6 +33,8 @@ namespace client
         volatile User curUser;
         Popup errPopup;
 
+        #region Events
+
         public void OnRandomChatMessageArrived(object sender, MessageArrivedEventArgs msg)
         {            
             string username = msg.MessageSender;
@@ -79,6 +81,10 @@ namespace client
 
                 this.leaveButton.IsEnabled = false;
                 this.sendPrivateMessageButton.IsEnabled = false;
+                this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
+
+                this.curUser.HasOngoingChat = false;
+                this.curUser.HasOngoingChatSearch = false;
             });           
         }
 
@@ -98,7 +104,8 @@ namespace client
                 this.sendPrivateMessageButton.IsEnabled = true;
             });            
         }
-
+        
+        #endregion
 
         public MainWindow()
         {
@@ -241,9 +248,10 @@ namespace client
             if (curUser.HasOngoingChatSearch || curUser.HasOngoingChat)
             {
                 this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
-                privatechat.ExitChat();
+                privatechat.ExitChat(); ///at this time, its still on the matchmanager
                 curUser.HasOngoingChatSearch = false;
                 curUser.HasOngoingChat = false;
+                Thread.Sleep(500);
             }
             else
             {
@@ -264,7 +272,7 @@ namespace client
 
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
         {
-            BeforeLogin.IsSelected = true;
+            MainMenu.IsSelected = true;
         }
 
 

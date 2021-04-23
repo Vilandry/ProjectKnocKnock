@@ -33,12 +33,12 @@ namespace client.Model
             if(username == "SERVER")
             {
                 string[] commandargs = message.Split("|");
-                if(commandargs[0] == "LEFT")
+                if(commandargs[0] == "!LEFT")
                 {
                     return commandargs[1] + " has disconnected!";
                 }
 
-                return "error?";
+                return "Messageformatter error";
             }
             else
             {

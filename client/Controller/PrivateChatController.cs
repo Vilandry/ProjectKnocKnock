@@ -35,7 +35,7 @@ namespace client.Controller
             client = new TcpClient(PortManager.instance().Host, PortManager.instance().Matchport);
             NetworkStream stream = client.GetStream();
 
-            if ( !connectToPrivateChatQueue(LookingForSex))
+            if (!connectToPrivateChatQueue(LookingForSex))
             {
                 Trace.WriteLine("Chatconnecting error at phase 1");
                 return false;
@@ -43,13 +43,13 @@ namespace client.Controller
 
             try
             {
-                while(true)
+                while (true)
                 {
                     Trace.WriteLine("PrivateChat: get matchport...");
                     string matchinfo = Utility.ReadFromNetworkStream(stream);
                     int chatport = int.Parse(matchinfo);
 
-                    if(!curUser.HasOngoingChatSearch)
+                    if (!curUser.HasOngoingChatSearch)
                     {
                         client.GetStream().Close();
                         client.Close();
@@ -69,7 +69,7 @@ namespace client.Controller
 
                         EventArgs e = new EventArgs();
                         OnChatBegins(e);
-                        
+
                         Thread t = new Thread(handleReading);
                         t.Start();
                         break;
@@ -78,9 +78,9 @@ namespace client.Controller
                     {
                         Trace.WriteLine("Failed matchmaking attempt.");
                     }
-                }                
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Trace.WriteLine("Chatconnecting error at phase 2. Error message: " + e.Message);
             }
@@ -113,7 +113,7 @@ namespace client.Controller
 
                 success = (responseData == "OK");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Trace.WriteLine("Error during privatechat connection: " + e.Message);
             }
@@ -126,9 +126,9 @@ namespace client.Controller
 
         public void handeMessaging(string username, string message)
         {
-            if(curUser.HasOngoingChat)
+            if (curUser.HasOngoingChat)
             {
-                if(message == "")
+                if (message == "")
                 {
                     Trace.WriteLine("PrivateChat Warning: empty message");
                     return;
@@ -149,18 +149,18 @@ namespace client.Controller
 
         private void handleReading()
         {
-            while(curUser.HasOngoingChat)
+            while (curUser.HasOngoingChat)
             {
                 NetworkStream stream = client.GetStream();
 
                 try
                 {
                     string raw_info = Utility.ReadFromNetworkStream(stream);
- 
+
 
                     string sender = raw_info.Split("|", 2)[0];
                     string msg = raw_info.Split("|", 2)[1];
-                    if(sender == "SERVER")
+                    if (sender == "SERVER")
                     {
                         handleCommands(raw_info);
                     }
@@ -169,12 +169,89 @@ namespace client.Controller
                     e.Message = msg;
                     OnMessageArrived(e);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
-                    Trace.WriteLine("Smth shit happened in private chat, error message: " + e.Message);
+                    Trace.WriteLine("Smth shit happened in private chat reading, error message: " + e.Message);
                 }
             }
         }
+
+        
+        private void handleCommands(string command)
+        {
+            string[] commandargs = command.Split("|");
+
+            if (commandargs[1] == "!LEFT")
+            {
+                ShutDownChat();
+            }
+            else
+            {
+                Trace.WriteLine("Unknown command: " + command);
+            }
+        }
+
+        /// <summary>
+        /// when you want to leave the chat
+        /// </summary>
+        public void ExitChat()
+        {
+            if (client == null)
+            {
+                return;
+            }
+            if (curUser.HasOngoingChat || curUser.HasOngoingChatSearch)
+            {
+                //client.Connect(PortManager.instance().Host, PortManager.instance().Matchport);
+                try
+                {
+                    NetworkStream stream = client.GetStream();
+                    string msg = "!LEAVE|" + curUser.Username;
+                    byte[] buffer = Encoding.Unicode.GetBytes(msg);
+                    stream.Write(buffer);
+                    Trace.WriteLine(msg + " sent!");
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("exiting with error");
+                }
+                finally
+                {
+                    client.Close();
+
+                    curUser.HasOngoingChat = false;
+
+                    EventArgs e = new EventArgs();
+                    OnChatEnded(e);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// when the partner left the chat
+        /// </summary>
+        public void ShutDownChat()
+        {
+            if (client == null)
+            {
+                return;
+            }
+            if (curUser.HasOngoingChat || curUser.HasOngoingChatSearch)
+            {
+                client.Close();
+
+                
+
+                curUser.HasOngoingChat = false;
+
+                EventArgs e = new EventArgs();
+                OnChatEnded(e);
+                Trace.WriteLine("Shutting down chat");
+            }
+        }
+
+
 
         protected virtual void OnMessageArrived(MessageArrivedEventArgs e)
         {
@@ -190,56 +267,6 @@ namespace client.Controller
         {
             chatEnded?.Invoke(this, e);
         }
-
-        private void handleCommands(string command)
-        {
-            string[] commandargs = command.Split("|");
-
-            if(commandargs[1] == "!LEFT")
-            {
-                ExitChat();
-            }
-            else
-            {
-                Trace.WriteLine("Unknown command: " + command);
-            }
-        }
-
-        public void ExitChat()
-        {
-            if(client == null)
-            {
-                return;
-            }
-            if(curUser.HasOngoingChat || curUser.HasOngoingChatSearch)
-            {               
-                //client.Connect(PortManager.instance().Host, PortManager.instance().Matchport);
-                try
-                {
-                    NetworkStream stream = client.GetStream();
-                    string msg = "!LEAVE|" + curUser.Username;
-                    byte[] buffer = Encoding.Unicode.GetBytes(msg);
-                    stream.Write(buffer);
-                    Trace.WriteLine(msg + " sent!");
-                }
-                catch(Exception e)
-                {
-                    Trace.WriteLine("exiting with error");
-                }
-                finally
-                {
-                    client.Close();
-
-                    curUser.HasOngoingChat = false;
-
-                    EventArgs e = new EventArgs();
-                    OnChatEnded(e);
-                }              
-            }
-
-        }
-
-
 
     }
 }
