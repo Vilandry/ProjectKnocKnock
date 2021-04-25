@@ -30,6 +30,8 @@ namespace client
     {
         LoginController login;
         PrivateChatController privatechat;
+        MiscController misc;
+
         volatile User curUser;
         Popup errPopup;
 
@@ -78,6 +80,7 @@ namespace client
             {
                 this.saveButton.Visibility = Visibility.Visible;
                 this.addFriendButton.Visibility = Visibility.Visible;
+                this.saveButton.IsEnabled = true;
 
                 this.leaveButton.IsEnabled = false;
                 this.sendPrivateMessageButton.IsEnabled = false;
@@ -113,6 +116,8 @@ namespace client
             curUser = new User();
             login = new LoginController();
             privatechat = new PrivateChatController(curUser);
+            misc = new MiscController();
+
             this.privateChatHistory.IsReadOnly = true;
             errPopup = new Popup();
             hideButtons();
@@ -125,6 +130,9 @@ namespace client
             privatechat.chatBegins += OnChatBegins;
             privatechat.MessageArrived += OnRandomChatMessageArrived;
             privatechat.chatEnded += OnChatEnded;
+            this.ResizeMode = ResizeMode.NoResize;
+
+            this.messageTextBox.MaxLength = 1024;
         }
 
 
@@ -186,6 +194,20 @@ namespace client
                 curUser.Gender = GENDER.OTHER;
             }
 
+
+            if( ! login.CheckAlphanumericCharacters(curUser.Username))
+            {
+                ErrorWindow popup = new ErrorWindow("Your name contains illegal characters! Make sure to use only letters and numbers!");
+                popup.ShowDialog();
+                return;
+            }
+
+            if (!login.CheckAlphanumericCharacters(pwd))
+            {
+                ErrorWindow popup = new ErrorWindow("Your password contains illegal characters! Make sure to use only letters and numbers!");
+                popup.ShowDialog();
+                return;
+            }
 
 
 
@@ -268,14 +290,13 @@ namespace client
             string msg = this.messageTextBox.Text;
             privatechat.handeMessaging(curUser.Username, msg);
             messageTextBox.Text = "";
+            messageTextBox.Focus();
         }
 
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
         {
             MainMenu.IsSelected = true;
         }
-
-
 
         private void displayButtons()
         {
@@ -298,11 +319,18 @@ namespace client
             privatechat.ExitChat();
         }
 
-        private void SaveMessageHistory(object sender, EventArgs e)
+        private void SaveMessageHistory(object sender, RoutedEventArgs e)
         {
             TextRange range = new TextRange(this.privateChatHistory.Document.ContentStart, this.privateChatHistory.Document.ContentEnd);
 
+            string id = curUser.LastPrivateChatConversationId;
             string history = range.Text;
+
+            misc.sendPrivateChatHistory(curUser.LastPrivateChatConversationId, history);
+            
+
+
+            this.saveButton.IsEnabled = false;
         }
     }
 }

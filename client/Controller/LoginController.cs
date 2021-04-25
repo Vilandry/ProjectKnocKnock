@@ -124,6 +124,10 @@ namespace client.Controller
             }
         }
 
+        public bool CheckAlphanumericCharacters(string username)
+        {
+            return username.All(char.IsLetterOrDigit);
+        }
 
         public int tryRegister(User user, string pwd)
         {

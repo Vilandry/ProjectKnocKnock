@@ -46,7 +46,7 @@ namespace client.Model
             }          
         }
 
-        public static string ReadFromNetworkStream(NetworkStream stream)
+        /*public static string ReadFromNetworkStream(NetworkStream stream)
         {
             byte[] bytes = new Byte[256];
             string message = null;
@@ -63,8 +63,43 @@ namespace client.Model
             
 
             return message;
+        }*/
+
+        public static string ReadFromNetworkStream(NetworkStream stream)
+        {
+            byte[] bytes = new Byte[1024];
+            string message = "";
+            int i = 0, byteCount = 0;
+            do
+            {
+                i = stream.Read(bytes, 0, bytes.Length);
+                // Translate data bytes to a ASCII string.
+                //message = Encoding.Unicode.GetString(bytes, byteCount, i);
+                message = message + Encoding.Unicode.GetString(bytes);
+                byteCount += i;
+            } while (stream.DataAvailable);
+            Trace.WriteLine("\nUTILITY: read from networkstream: " + message + "\n");
+
+            return message;
+        }
+
+        public static string EscapePrivateChat(string history)
+        {
+            history.Replace("<e>", "<e><e>"); ///<e> is escape, <f> is newline
+            history.Replace("<f>", "<e><f>");
+            history.Replace("\n", "<f>");
+
+
+            return history;
         }
     }
+
+    /*public class ChatEndedEventArgs : EventArgs
+    {
+        private string conversationId;
+
+        public string ConverastionId { get { return conversationId; } set { conversationId = value; } }
+    }*/
 
     public class MessageArrivedEventArgs : EventArgs
     {

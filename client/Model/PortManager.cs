@@ -32,9 +32,10 @@ namespace client.Model
         {
             matchport = 9900;
             loginport = 11000;
-
+            miscport = 9899;
             infoport = 9000; ///this should be const
 
+            //host = "34.116.221.128";
             host = "localhost";
         }
 

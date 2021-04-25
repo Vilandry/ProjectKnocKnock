@@ -23,7 +23,6 @@ namespace client.Controller
         public event EventHandler chatEnded;
         public event EventHandler chatBegins;
 
-
         public PrivateChatController(User cu)
         {
             curUser = cu;
@@ -58,10 +57,12 @@ namespace client.Controller
 
                     Trace.WriteLine("PrivateChat: trying to verify...");
                     string verify = Utility.ReadFromNetworkStream(stream);
+                    string[] verifyparams = verify.Split("|");
 
-                    if (verify == "OK")
+                    if (verifyparams[0] == "OK")
                     {
-                        Trace.WriteLine("PrivateChat: verified!");
+                        curUser.LastPrivateChatConversationId = verifyparams[1];
+                        Trace.WriteLine("PrivateChat: verified! Conversationid: " + verifyparams[1]);
                         curUser.HasOngoingChat = true;
 
                         client = new TcpClient(PortManager.instance().Host, chatport);
@@ -149,10 +150,9 @@ namespace client.Controller
 
         private void handleReading()
         {
+            NetworkStream stream = client.GetStream();
             while (curUser.HasOngoingChat)
-            {
-                NetworkStream stream = client.GetStream();
-
+            {                
                 try
                 {
                     string raw_info = Utility.ReadFromNetworkStream(stream);
@@ -222,6 +222,7 @@ namespace client.Controller
                     curUser.HasOngoingChat = false;
 
                     EventArgs e = new EventArgs();
+                    //e.ConverastionId = curUser.LastPrivateChatConversationId;
                     OnChatEnded(e);
                 }
             }
@@ -246,6 +247,8 @@ namespace client.Controller
                 curUser.HasOngoingChat = false;
 
                 EventArgs e = new EventArgs();
+                //e.ConverastionId = curUser.LastPrivateChatConversationId;
+
                 OnChatEnded(e);
                 Trace.WriteLine("Shutting down chat");
             }
