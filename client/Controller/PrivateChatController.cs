@@ -57,12 +57,13 @@ namespace client.Controller
 
                     Trace.WriteLine("PrivateChat: trying to verify...");
                     string verify = Utility.ReadFromNetworkStream(stream);
-                    string[] verifyparams = verify.Split("|");
+                    string[] verifyparams = verify.Split("|",2);
 
                     if (verifyparams[0] == "OK")
                     {
                         curUser.LastPrivateChatConversationId = verifyparams[1];
                         Trace.WriteLine("PrivateChat: verified! Conversationid: " + verifyparams[1]);
+                        curUser.LastPrivateChatUsername = verifyparams[1].Split("|")[2];
                         curUser.HasOngoingChat = true;
 
                         client = new TcpClient(PortManager.instance().Host, chatport);
@@ -110,7 +111,7 @@ namespace client.Controller
 
                 string responseData = Utility.ReadFromNetworkStream(stream);
 
-                Trace.WriteLine("\nReceived from matchserver: " + responseData + "\n");
+                Trace.WriteLine("\n" + responseData + "\nReceived from matchserver: " + responseData + "\n");
 
                 success = (responseData == "OK");
             }

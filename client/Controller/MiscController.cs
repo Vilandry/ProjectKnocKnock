@@ -69,12 +69,20 @@ namespace client.Controller
                     {
                         byte[] data = Encoding.Unicode.GetBytes(history);
 
-                        StreamWriter writer = new StreamWriter(stream);
-                        writer.Write(data);
+                        //StreamWriter writer = new StreamWriter(stream);
+
+                        Trace.WriteLine("Sending: " + history);
+                        //writer.Write(data);
+                        stream.Write(data);
+                        Trace.WriteLine("sent: " + history);
+
+                        string okmsg = Utility.ReadFromNetworkStream(stream);
+                        success = (okmsg == "OK");
                     }
                 }
                 catch(Exception e)
                 {
+                    Trace.WriteLine("Error in sending history: error message " + e.Message);
                     client.Close();
                     return false;
                 }                

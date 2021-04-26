@@ -18,6 +18,7 @@ namespace client.Model
         private volatile bool hasOngoingChat;
         private volatile bool hasOngoingChatSearch;
         private string lastPrivateChatConversationId;
+        private string lastPrivateChatUsername;
 
         //private SEX lookingforsex;
 
@@ -39,6 +40,7 @@ namespace client.Model
         public bool HasOngoingChatSearch { get { return hasOngoingChatSearch; } set { hasOngoingChatSearch = value; } }
 
         public string LastPrivateChatConversationId { get { return lastPrivateChatConversationId; } set { lastPrivateChatConversationId = value; } }
+        public string LastPrivateChatUsername { get { return lastPrivateChatUsername; } set { lastPrivateChatUsername = value; } }
     }
 
 

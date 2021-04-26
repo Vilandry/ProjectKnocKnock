@@ -67,18 +67,20 @@ namespace client.Model
 
         public static string ReadFromNetworkStream(NetworkStream stream)
         {
-            byte[] bytes = new Byte[1024];
+            byte[] bytes;
             string message = "";
             int i = 0, byteCount = 0;
             do
             {
+                bytes = new Byte[1024];
                 i = stream.Read(bytes, 0, bytes.Length);
                 // Translate data bytes to a ASCII string.
                 //message = Encoding.Unicode.GetString(bytes, byteCount, i);
-                message = message + Encoding.Unicode.GetString(bytes);
+                message = message + Encoding.Unicode.GetString(bytes, 0, i);
                 byteCount += i;
             } while (stream.DataAvailable);
-            Trace.WriteLine("\nUTILITY: read from networkstream: " + message + "\n");
+            //message = Regex.Replace(message, @"\p{C}+", string.Empty);
+            Trace.WriteLine("\nUTILITY: read from networkstream: " + message + "..!!..\n");
 
             return message;
         }
