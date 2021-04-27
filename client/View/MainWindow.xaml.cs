@@ -69,7 +69,7 @@ namespace client
 
                 this.privateChatHistory.Document.Blocks.Add(paragraph);
 
-                this.privateChatHistory.Focus();
+                this.messageTextBox.Focus();
                 this.privateChatHistory.ScrollToEnd();
             });
         }
@@ -88,7 +88,15 @@ namespace client
 
                 this.curUser.HasOngoingChat = false;
                 this.curUser.HasOngoingChatSearch = false;
-            });           
+
+
+
+                Paragraph paragraph = new Paragraph();
+                paragraph.Inlines.Add(new Run("Connection lost! Ending chat..."));
+                paragraph.TextAlignment = TextAlignment.Left;
+                paragraph.Foreground = Brushes.Red;
+            });
+
         }
 
         public void OnChatBegins(object sender, EventArgs e)
@@ -106,6 +114,15 @@ namespace client
                 this.leaveButton.IsEnabled = true;
                 this.sendPrivateMessageButton.IsEnabled = true;
             });            
+        }
+
+        public void OnServerDown(object sender, EventArgs e)
+        {
+            BeforeLogin.IsSelected = true;
+            errPopup = new Popup();
+            string text = "Lost connection to server! Come back soon!";
+            ErrorWindow popup = new ErrorWindow(text);
+            popup.ShowDialog();
         }
         
         #endregion

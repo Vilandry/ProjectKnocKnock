@@ -36,7 +36,7 @@ namespace client.Model
             infoport = 9000; ///this should be const
 
             //host = "34.116.221.128";
-            host = "localhost";
+            host = "34.116.221.128";
         }
 
 

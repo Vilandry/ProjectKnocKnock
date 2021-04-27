@@ -22,6 +22,7 @@ namespace client.Controller
         public event EventHandler<MessageArrivedEventArgs> MessageArrived;
         public event EventHandler chatEnded;
         public event EventHandler chatBegins;
+        public event EventHandler lostConnection;
 
         public PrivateChatController(User cu)
         {
@@ -135,12 +136,21 @@ namespace client.Controller
                     Trace.WriteLine("PrivateChat Warning: empty message");
                     return;
                 }
-                NetworkStream stream = client.GetStream();
-                string toBeSend = username + "|" + message;
-                Trace.WriteLine("Privatechat message sent: " + message);
+                try
+                {
+                    NetworkStream stream = client.GetStream();
+                    string toBeSend = username + "|" + message;
+                    Trace.WriteLine("Privatechat message sent: " + message);
 
-                byte[] buffer = Encoding.Unicode.GetBytes(toBeSend);
-                stream.Write(buffer);
+                    byte[] buffer = Encoding.Unicode.GetBytes(toBeSend);
+                    stream.Write(buffer);
+                }
+                catch(Exception e)
+                {
+                    Trace.WriteLine("dead server prob tbh exception message: " + e.Message);
+                    ShutDownChat();
+                }
+                
             }
             else
             {
