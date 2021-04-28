@@ -80,8 +80,12 @@ namespace client
             {
                 this.saveButton.Visibility = Visibility.Visible;
                 this.addFriendButton.Visibility = Visibility.Visible;
-                this.saveButton.IsEnabled = true;
 
+                if(curUser.LastPrivateChatHistory != "")
+                {
+                    this.saveButton.IsEnabled = true;
+                }
+                
                 this.leaveButton.IsEnabled = false;
                 this.sendPrivateMessageButton.IsEnabled = false;
                 this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
@@ -338,14 +342,8 @@ namespace client
 
         private void SaveMessageHistory(object sender, RoutedEventArgs e)
         {
-            TextRange range = new TextRange(this.privateChatHistory.Document.ContentStart, this.privateChatHistory.Document.ContentEnd);
 
-            string id = curUser.LastPrivateChatConversationId;
-            string history = range.Text;
-
-            misc.sendPrivateChatHistory(curUser.LastPrivateChatConversationId, history);
-            
-
+            misc.sendPrivateChatHistory(curUser.LastPrivateChatConversationId, curUser.LastPrivateChatHistory);
 
             this.saveButton.IsEnabled = false;
         }

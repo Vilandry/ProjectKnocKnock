@@ -17,12 +17,13 @@ namespace client.Controller
     public class PrivateChatController
     {
         private TcpClient client;
-        volatile User curUser;
+        private volatile User curUser;
 
         public event EventHandler<MessageArrivedEventArgs> MessageArrived;
         public event EventHandler chatEnded;
         public event EventHandler chatBegins;
         public event EventHandler lostConnection;
+
 
         public PrivateChatController(User cu)
         {
@@ -30,7 +31,7 @@ namespace client.Controller
         }
 
         public bool HandlePrivateChatting(GENDER LookingForSex)
-        {
+        {           
             bool success = false;
             client = new TcpClient(PortManager.instance().Host, PortManager.instance().Matchport);
             NetworkStream stream = client.GetStream();
@@ -62,6 +63,7 @@ namespace client.Controller
 
                     if (verifyparams[0] == "OK")
                     {
+                        curUser.LastPrivateChatHistory = "";
                         curUser.LastPrivateChatConversationId = verifyparams[1];
                         Trace.WriteLine("PrivateChat: verified! Conversationid: " + verifyparams[1]);
                         curUser.LastPrivateChatUsername = verifyparams[1].Split("|")[2];
@@ -176,13 +178,27 @@ namespace client.Controller
                         handleCommands(raw_info);
                     }
                     MessageArrivedEventArgs e = new MessageArrivedEventArgs();
+
+                    string historymessage =  Utility.EscapePrivateChatHistory( Utility.MessageFormatter(sender, msg)) + "<f>";
+
+                    curUser.LastPrivateChatHistory = curUser.LastPrivateChatHistory  + historymessage;
+
                     e.MessageSender = sender;
                     e.Message = msg;
                     OnMessageArrived(e);
                 }
                 catch (Exception e)
                 {
-                    Trace.WriteLine("Smth shit happened in private chat reading, error message: " + e.Message);
+                    Thread.Sleep(100);
+                    if(curUser.HasOngoingChat)
+                    {
+                        Trace.WriteLine("Looks like chat ended by occasion error messages: " + e.Message);
+                    }
+                    else
+                    {
+                        Trace.WriteLine("Smth shit happened in private chat reading, error message: " + e.Message);
+                    }
+
                 }
             }
         }
@@ -256,6 +272,7 @@ namespace client.Controller
                 
 
                 curUser.HasOngoingChat = false;
+                curUser.HasOngoingChatSearch = false;
 
                 EventArgs e = new EventArgs();
                 //e.ConverastionId = curUser.LastPrivateChatConversationId;

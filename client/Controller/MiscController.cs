@@ -26,10 +26,11 @@ namespace client.Controller
         public bool sendPrivateChatHistory(string conversationID, string history)
         {
             bool success = true;
-            history.Replace("<e>", "<e><e>");
-            history.Replace("<f>", "<e><f>");
-            history.Replace("\n", "<f>");
-            Trace.WriteLine(history);
+
+            Trace.WriteLine("history: " + history);
+            history = Utility.EscapePrivateChatHistory(history);
+
+            Trace.WriteLine("history: " + history);
 
             lock(llock)
             {
@@ -68,6 +69,7 @@ namespace client.Controller
                     else if(attemptResult == "INSERT")
                     {
                         byte[] data = Encoding.Unicode.GetBytes(history);
+
 
                         //StreamWriter writer = new StreamWriter(stream);
 

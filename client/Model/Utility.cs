@@ -5,6 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace client.Model
 {
@@ -85,15 +86,29 @@ namespace client.Model
             return message;
         }
 
-        public static string EscapePrivateChat(string history)
+        public static string EscapePrivateChatHistory(string history)
         {
             history.Replace("<e>", "<e><e>"); ///<e> is escape, <f> is newline
             history.Replace("<f>", "<e><f>");
-            history.Replace("\n", "<f>");
-
 
             return history;
         }
+
+        public static string[] ReescapePrivateChatHistory(string history)
+        {
+            string pattern = @"\b<f>\b";
+            string input = history;
+            string[] conversation = Regex.Split(input, pattern, RegexOptions.IgnoreCase);
+
+            foreach(string msg in conversation)
+            {
+                Trace.WriteLine("msgline: " + msg);
+            }
+
+            return conversation;
+            
+        }
+
     }
 
     /*public class ChatEndedEventArgs : EventArgs

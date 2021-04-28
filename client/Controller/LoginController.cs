@@ -136,6 +136,10 @@ namespace client.Controller
                 ForcedReconnect();
                 int success = 0;
 
+                if(user.Username == "SERVER")
+                {
+                    return 0;
+                }
 
                 string message = "REGISTER" + "|" + user.Username + "|" + Utility.CreateMD5(pwd) + "|" + (int)user.AgeCategory + "|" + (int)user.Gender;
                 Byte[] data = Encoding.Unicode.GetBytes(message);
