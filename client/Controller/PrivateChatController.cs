@@ -33,17 +33,29 @@ namespace client.Controller
         public bool HandlePrivateChatting(GENDER LookingForSex)
         {           
             bool success = false;
-            client = new TcpClient(PortManager.instance().Host, PortManager.instance().Matchport);
-            NetworkStream stream = client.GetStream();
+            try
+            {
+                client = new TcpClient(PortManager.instance().Host, PortManager.instance().Matchport);                
+            }
+            catch(Exception e)
+            {
+                Trace.WriteLine("error in connection to matchmaking shit err msg: " + e.Message);
+                EventArgs er = new EventArgs();
+                OnLostConnection(er);
+                return false;
+            }
+            
 
             if (!connectToPrivateChatQueue(LookingForSex))
             {
                 Trace.WriteLine("Chatconnecting error at phase 1");
+                ShutDownChat();
                 return false;
             }
 
             try
             {
+                NetworkStream stream = client.GetStream();
                 while (true)
                 {
                     Trace.WriteLine("PrivateChat: get matchport...");
@@ -87,7 +99,13 @@ namespace client.Controller
             }
             catch (Exception e)
             {
-                Trace.WriteLine("Chatconnecting error at phase 2. Error message: " + e.Message);
+                Trace.WriteLine("Chatconnecting error at phase 2. Error message: " + e.Message);                
+                if(curUser.HasOngoingChatSearch)
+                {
+                    EventArgs er = new EventArgs();
+                    OnLostConnection(er);
+                }
+                ShutDownChat();
             }
 
             return success;
@@ -179,7 +197,7 @@ namespace client.Controller
                     }
                     MessageArrivedEventArgs e = new MessageArrivedEventArgs();
 
-                    string historymessage =  Utility.EscapePrivateChatHistory( Utility.MessageFormatter(sender, msg)) + "<f>";
+                    string historymessage = Utility.MessageFormatter(sender, msg) + "\n";
 
                     curUser.LastPrivateChatHistory = curUser.LastPrivateChatHistory  + historymessage;
 
@@ -190,13 +208,16 @@ namespace client.Controller
                 catch (Exception e)
                 {
                     Thread.Sleep(100);
-                    if(curUser.HasOngoingChat)
+                    if(!curUser.HasOngoingChat)
                     {
-                        Trace.WriteLine("Looks like chat ended by occasion error messages: " + e.Message);
+                        Trace.WriteLine("Looks like chat ended by occasion error message: " + e.Message);
                     }
                     else
                     {
                         Trace.WriteLine("Smth shit happened in private chat reading, error message: " + e.Message);
+                        EventArgs eventarg = new EventArgs();
+
+                        OnLostConnection(eventarg);
                     }
 
                 }
@@ -240,7 +261,7 @@ namespace client.Controller
                 }
                 catch (Exception e)
                 {
-                    Trace.WriteLine("exiting with error");
+                    Trace.WriteLine("exiting with error on exitchat error msg: " + e.Message);
                 }
                 finally
                 {
@@ -297,6 +318,11 @@ namespace client.Controller
         protected virtual void OnChatEnded(EventArgs e)
         {
             chatEnded?.Invoke(this, e);
+        }
+
+        protected virtual void OnLostConnection(EventArgs e)
+        {
+            lostConnection?.Invoke(this, e);
         }
 
     }

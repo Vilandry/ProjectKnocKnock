@@ -86,7 +86,7 @@ namespace client.Model
             return message;
         }
 
-        public static string EscapePrivateChatHistory(string history)
+        /*public static string EscapePrivateChatHistory(string history)
         {
             history.Replace("<e>", "<e><e>"); ///<e> is escape, <f> is newline
             history.Replace("<f>", "<e><f>");
@@ -107,7 +107,7 @@ namespace client.Model
 
             return conversation;
             
-        }
+        }*/
 
     }
 

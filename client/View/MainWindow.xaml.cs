@@ -122,11 +122,14 @@ namespace client
 
         public void OnServerDown(object sender, EventArgs e)
         {
-            BeforeLogin.IsSelected = true;
-            errPopup = new Popup();
-            string text = "Lost connection to server! Come back soon!";
-            ErrorWindow popup = new ErrorWindow(text);
-            popup.ShowDialog();
+            this.Dispatcher.Invoke(() =>
+            {
+                BeforeLogin.IsSelected = true;
+                errPopup = new Popup();
+                string text = "Lost connection to server! Come back soon!";
+                ErrorWindow popup = new ErrorWindow(text);
+                popup.ShowDialog();
+            });
         }
         
         #endregion
@@ -151,6 +154,8 @@ namespace client
             privatechat.chatBegins += OnChatBegins;
             privatechat.MessageArrived += OnRandomChatMessageArrived;
             privatechat.chatEnded += OnChatEnded;
+            privatechat.lostConnection += OnServerDown;
+
             this.ResizeMode = ResizeMode.NoResize;
 
             this.messageTextBox.MaxLength = 1024;
@@ -186,6 +191,8 @@ namespace client
         {
             curUser.Username = SignupNameBox.Text;
             string pwd = SignupPasswordBox.Password;
+
+
             Trace.WriteLine("\n\n\n" + Utility.CreateMD5(pwd) + "\n\n\n");
 
             if (this.ETTT.IsChecked == true) ///18-23
@@ -223,9 +230,9 @@ namespace client
                 return;
             }
 
-            if (!login.CheckAlphanumericCharacters(pwd))
+            if (!login.CheckAlphanumericCharacters(pwd) || pwd.Length < 5)
             {
-                ErrorWindow popup = new ErrorWindow("Your password contains illegal characters! Make sure to use only letters and numbers!");
+                ErrorWindow popup = new ErrorWindow("Wrong password! Make sure to use only letters and numbers and Your password must be at least 5 letter long!");
                 popup.ShowDialog();
                 return;
             }

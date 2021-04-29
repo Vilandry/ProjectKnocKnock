@@ -28,9 +28,7 @@ namespace client.Controller
             bool success = true;
 
             Trace.WriteLine("history: " + history);
-            history = Utility.EscapePrivateChatHistory(history);
-
-            Trace.WriteLine("history: " + history);
+            
 
             lock(llock)
             {
