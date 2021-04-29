@@ -16,6 +16,7 @@
             <ImageBrush ImageSource="/images/background.png"/>
         </Grid.Background>
         <TabControl Background="#4CEAEAEA" x:Name="MainTab" Margin="112,0,10,10" BorderBrush="{x:Null}" >
+
             <TabItem Header="BeforeLogin" Background="{x:Null}" Opacity="100" x:Name="BeforeLogin" BorderBrush="{x:Null}">
                 <Grid Visibility="Visible">
                     <Button Click="loginAttempt" x:Name="LoginButton" Content="Log in!" HorizontalAlignment="Left" Margin="43,638,0,0" VerticalAlignment="Top" Height="69" Width="347" FontFamily="Bahnschrift Light" FontSize="22"/>
@@ -99,13 +100,46 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="ChatGroupList" Background="{x:Null}" Opacity="0.5" x:Name="ChatGroupList">
+            <TabItem Header="FriendList" Background="{x:Null}" Opacity="0.5" x:Name="FriendListPage">
 
             </TabItem>
 
-            <TabItem Header="ChatGroupList" Background="{x:Null}" Opacity="0.5" x:Name="CurrentGroup">
+            <TabItem Header="BlockList" Background="{x:Null}" Opacity="0.5" x:Name="BlockListPage">
 
             </TabItem>
+
+            <TabItem Header="MessageHistory" Background="{x:Null}" Opacity="0.5" x:Name="MessageHistoryPage">
+                <Grid Height="742" Margin="0,0,4,0">
+
+
+                    <RichTextBox Margin="304,-14,10,112">
+                        <FlowDocument>
+                            <Paragraph>
+                                <Run Text="RichTextBox"/>
+                            </Paragraph>
+                        </FlowDocument>
+                    </RichTextBox>
+                    
+                    <ListView Margin="0,0,1027,112" x:Name="ChatHistoryListView">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                        
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+
+                    </ListView>
+                </Grid>
+
+            </TabItem>
+
+
 
 
 

@@ -223,16 +223,16 @@ namespace client
             }
 
 
-            if( ! login.CheckAlphanumericCharacters(curUser.Username))
+            if( ! login.CheckAlphanumericCharacters(curUser.Username) || curUser.Username.Length < 4)
             {
-                ErrorWindow popup = new ErrorWindow("Your name contains illegal characters! Make sure to use only letters and numbers!");
+                ErrorWindow popup = new ErrorWindow("Your name contains illegal characters! Make sure to use only letters and numbers! Also Your username must be at least 4 character long");
                 popup.ShowDialog();
                 return;
             }
 
             if (!login.CheckAlphanumericCharacters(pwd) || pwd.Length < 5)
             {
-                ErrorWindow popup = new ErrorWindow("Wrong password! Make sure to use only letters and numbers and Your password must be at least 5 letter long!");
+                ErrorWindow popup = new ErrorWindow("Illegal password! Make sure to use only letters and numbers. Also Your password must be at least 5 character long!");
                 popup.ShowDialog();
                 return;
             }

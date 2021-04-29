@@ -23,7 +23,7 @@ namespace client.Controller
 
         }
 
-        public bool sendPrivateChatHistory(string conversationID, string history)
+        public bool sendPrivateChatHistory(string conversationID, string history, string sender)
         {
             bool success = true;
 
@@ -66,7 +66,7 @@ namespace client.Controller
                     }
                     else if(attemptResult == "INSERT")
                     {
-                        byte[] data = Encoding.Unicode.GetBytes(history);
+                        byte[] data = Encoding.Unicode.GetBytes(sender + "|" +  history);
 
 
                         //StreamWriter writer = new StreamWriter(stream);
