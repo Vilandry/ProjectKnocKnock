@@ -124,11 +124,13 @@ namespace client
         {
             this.Dispatcher.Invoke(() =>
             {
+                hideButtons();
                 BeforeLogin.IsSelected = true;
                 errPopup = new Popup();
                 string text = "Lost connection to server! Come back soon!";
                 ErrorWindow popup = new ErrorWindow(text);
                 popup.ShowDialog();
+               
             });
         }
         
@@ -155,12 +157,72 @@ namespace client
             privatechat.MessageArrived += OnRandomChatMessageArrived;
             privatechat.chatEnded += OnChatEnded;
             privatechat.lostConnection += OnServerDown;
+            misc.lostConnection += OnServerDown;
 
             this.ResizeMode = ResizeMode.NoResize;
 
             this.messageTextBox.MaxLength = 1024;
         }
 
+        private void SelectSaveHistory(object sender, MouseButtonEventArgs e)
+        {
+            var item = sender as MessageHistoryEntry;
+            if (item != null && item.IsSelected)
+            {
+                Trace.WriteLine(item.Content);
+            }
+            /*ListViewItem entry = new ListViewItem();
+            entry.Content = ((ListViewItem)sender).Content + "i";
+            Trace.WriteLine(entry.Content);
+
+            this.ChatHistoryListView.Items.Add(entry);*/
+
+
+            loadedHistory.Document.Blocks.Clear();
+            //var item = (MessageHistoryEntry)(sender as ListView).SelectedItem;
+
+            Trace.WriteLine(sender.ToString() + " vege");
+            Trace.WriteLine((sender is MessageHistoryEntry) + " vege");
+
+            if (item != null)
+            {
+                string res = misc.GetChatHistoryMessage(item.Content.ToString());
+
+                string[] lines = res.Split("\n");
+
+                foreach (string line in lines)
+                {
+                    if (line == "") { continue; }
+                    Trace.WriteLine(line + " <- was the line");
+                    string username = line.Split(":", 2)[0];
+                    string Text = line.Split(":", 2)[1].Trim();
+                    string displayText = Utility.MessageFormatter(username, Text);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        Paragraph paragraph = new Paragraph();
+                        paragraph.Inlines.Add(new Run(displayText));
+
+                        if (username == curUser.Username)
+                        {
+                            paragraph.TextAlignment = TextAlignment.Right;
+                            paragraph.Foreground = Brushes.Orange;
+                        }
+                        else
+                        {
+                            paragraph.TextAlignment = TextAlignment.Left;
+                            paragraph.Foreground = Brushes.Purple;
+                        }
+
+                        this.loadedHistory.Document.Blocks.Add(paragraph);
+
+                        this.loadedHistory.ScrollToEnd();
+                    });
+                }
+            }
+            else { Trace.WriteLine("shiiiiit"); }
+
+             
+        }
 
         private void loginAttempt(Object sender, RoutedEventArgs e)
         {                
@@ -326,6 +388,24 @@ namespace client
             MainMenu.IsSelected = true;
         }
 
+        private void BeginHistory(object sender, RoutedEventArgs e)
+        {           
+            MessageHistoryPage.IsSelected = true;
+            string[] histories = misc.GetUserHistoryIDs(curUser.Username);
+
+            foreach(string history in histories)
+            {
+                MessageHistoryEntry entry = new MessageHistoryEntry();
+
+                entry.Entrystring = history;
+
+                ChatHistoryListView.Items.Add(entry);
+            }
+
+            loadedHistory.Document.Blocks.Clear();
+
+        }
+
         private void displayButtons()
         {
             this.groupChatButton.Visibility = Visibility.Visible;
@@ -350,9 +430,39 @@ namespace client
         private void SaveMessageHistory(object sender, RoutedEventArgs e)
         {
 
-            misc.sendPrivateChatHistory(curUser.LastPrivateChatConversationId, curUser.LastPrivateChatHistory);
+            misc.sendPrivateChatHistory(curUser.LastPrivateChatConversationId, curUser.LastPrivateChatHistory, curUser.Username);
 
             this.saveButton.IsEnabled = false;
+        }
+
+
+        public class MessageHistoryEntry : ListViewItem
+        {
+
+
+            public int EpochTime { get { return int.Parse(this.Content.ToString().Split("|")[0]); } }
+            public string[] Usernames { get { return this.Content.ToString().Split("|").Skip(1).ToArray(); } }
+            public string Partner { get { return this.Content.ToString().Split("|").Skip(1).ToArray()[0]; } }
+
+            public string Entrystring { get { return this.Content.ToString(); } set { this.Content = value; } }
+            public string TimeString { get {
+            Trace.WriteLine(this.Content.ToString().Split("|")[0] + "waaaaa" + this.Content.ToString());
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(int.Parse(this.Content.ToString().Split("|")[0]));
+            return dateTimeOffset.ToString(); } }
+
+            /*private string entrystring;
+            public bool IsSelected { get; set; }
+            public int EpochTime { get { return int.Parse(entrystring.Split("|")[0]); } }
+            public string[] Usernames { get { return entrystring.Split("|").Skip(1).ToArray(); } }
+            public string Partner { get { return entrystring.Split("|").Skip(1).ToArray()[0]; } }
+
+            public string Entrystring { get { return entrystring; } set { entrystring = value; } }
+            public string TimeString { get { 
+                    Trace.WriteLine(entrystring.Split("|")[0] + "waaaaa" + entrystring);
+                    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(int.Parse(entrystring.Split("|")[0])); 
+                    return dateTimeOffset.ToString(); } }*/
+
+
         }
     }
 }

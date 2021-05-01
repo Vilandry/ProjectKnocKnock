@@ -86,6 +86,8 @@ namespace client.Model
             return message;
         }
 
+
+
         /*public static string EscapePrivateChatHistory(string history)
         {
             history.Replace("<e>", "<e><e>"); ///<e> is escape, <f> is newline
@@ -117,6 +119,8 @@ namespace client.Model
 
         public string ConverastionId { get { return conversationId; } set { conversationId = value; } }
     }*/
+
+
 
     public class MessageArrivedEventArgs : EventArgs
     {

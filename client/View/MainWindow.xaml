@@ -92,9 +92,9 @@
 
                     <TextBox x:Name="messageTextBox" HorizontalAlignment="Left" Margin="77,646,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Width="607" Height="64"/>
                     <Button x:Name="sendPrivateMessageButton" Click="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="697,646,0,0" VerticalAlignment="Top" Height="64" Width="64" IsDefault="True"/>
-                    <Button x:Name="leaveButton" Click="Shutdown" Content="Leave" HorizontalAlignment="Left" Margin="1226,646,0,0" VerticalAlignment="Top" Width="64" Height="64"/>
-                    <Button x:Name="saveButton" Click="SaveMessageHistory" Content="Save" HorizontalAlignment="Left" Margin="889,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
-                    <Button x:Name="addFriendButton" Content="Add as friend!" HorizontalAlignment="Left" Margin="1017,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
+                    <Button x:Name="leaveButton" Click="Shutdown" Content="Leave" HorizontalAlignment="Left" Margin="1158,646,0,0" VerticalAlignment="Top" Width="64" Height="64"/>
+                    <Button x:Name="saveButton" Click="SaveMessageHistory" Content="Save" HorizontalAlignment="Left" Margin="839,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
+                    <Button x:Name="addFriendButton" Content="Add as friend!" HorizontalAlignment="Left" Margin="967,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
 
 
                 </Grid>
@@ -112,24 +112,26 @@
                 <Grid Height="742" Margin="0,0,4,0">
 
 
-                    <RichTextBox Margin="304,-14,10,112">
+                    <RichTextBox x:Name="loadedHistory" Margin="304,-14,10,112">
                         <FlowDocument>
                             <Paragraph>
                                 <Run Text="RichTextBox"/>
                             </Paragraph>
                         </FlowDocument>
                     </RichTextBox>
-                    
-                    <ListView Margin="0,0,1027,112" x:Name="ChatHistoryListView">
+
+                    <ListView Margin="0,0,1027,112" x:Name="ChatHistoryListView" >
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn/>
+                                <GridViewColumn Header="Date" DisplayMemberBinding="{Binding TimeString}"/>
+                                <GridViewColumn Header="Partner" DisplayMemberBinding="{Binding Partner}"/>
                             </GridView>
                         </ListView.View>
-                        
+
+
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
-                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SelectSaveHistory" />
                             </Style>
                         </ListView.ItemContainerStyle>
 
@@ -158,7 +160,7 @@
 
         </Button>
 
-        <Button x:Name="groupChatButton" Content="" HorizontalAlignment="Left" Margin="7,115,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0">
+        <Button x:Name="groupChatButton" Click="BeginHistory" Content="" HorizontalAlignment="Left" Margin="7,115,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0">
             <Button.Background>
                 <ImageBrush ImageSource="/images/group.png"/>
             </Button.Background>
