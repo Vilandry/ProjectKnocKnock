@@ -47,33 +47,32 @@
             <TabItem Header="MainMenu" Background="{x:Null}" Opacity="0.5" x:Name="MainMenu">
                 <Grid>
 
-                    <RadioButton x:Name="lookingForFemale" Content="Female." Margin="99,321,1085,376" IsChecked="True" GroupName="lookingfor" FontFamily="Bahnschrift Light">
+                    <RadioButton x:Name="lookingForFemale" Content="Female." Margin="99,135,994,460" IsChecked="True" GroupName="lookingfor" FontFamily="Bahnschrift Light">
                         <RadioButton.RenderTransform>
                             <ScaleTransform ScaleX="3" ScaleY="3"/>
                         </RadioButton.RenderTransform>
                     </RadioButton>
 
-                    <RadioButton x:Name="lookingForMale" Content="Male." Margin="99,392,1085,329" GroupName="lookingfor" FontFamily="Bahnschrift Light">
+                    <RadioButton x:Name="lookingForMale" Content="Male." Margin="99,277,994,366" GroupName="lookingfor" FontFamily="Bahnschrift Light">
                         <RadioButton.RenderTransform>
                             <ScaleTransform ScaleX="3" ScaleY="3"/>
                         </RadioButton.RenderTransform>
                     </RadioButton>
 
-                    <RadioButton x:Name="lookingForOther" Content="Other?" Margin="99,463,1085,281" GroupName="lookingfor" FontFamily="Bahnschrift Light">
+                    <RadioButton x:Name="lookingForOther" Content="Other?" Margin="99,419,994,271" GroupName="lookingfor" FontFamily="Bahnschrift Light">
                         <RadioButton.RenderTransform>
                             <ScaleTransform ScaleX="3" ScaleY="3"/>
                         </RadioButton.RenderTransform>
                     </RadioButton>
 
-                    <RadioButton x:Name="lookingForAny" Content="Any!" Margin="99,529,1085,200" GroupName="lookingfor" FontFamily="Bahnschrift Light">
+                    <RadioButton x:Name="lookingForAny" Content="Any!" Margin="99,550,1006,172" GroupName="lookingfor" FontFamily="Bahnschrift Light">
                         <RadioButton.RenderTransform>
                             <ScaleTransform ScaleX="3" ScaleY="3"/>
                         </RadioButton.RenderTransform>
                     </RadioButton>
 
-                    <Button x:Name="joinPrivateMatchServer" Click="joinPrivateMatchQueue" Content="GIVE ME A MATCH!" Margin="721,565,63,144"/>
-                    <TextBlock HorizontalAlignment="Left" Margin="99,230,0,0" Text="Aaaaand I'm looking for a..." TextWrapping="Wrap" VerticalAlignment="Top" Height="71" Width="688" FontFamily="Bahnschrift Light" FontSize="48"/>
-                    <Button Content="GIVE ME MY ONLINE FRIENDS" HorizontalAlignment="Left" Margin="721,687,0,0" VerticalAlignment="Top" Height="71" Width="469"/>
+                    <Button x:Name="joinPrivateMatchServer" Click="joinPrivateMatchQueue" Content="GIVE ME A MATCH!" Margin="731,597,53,10"/>
+                    <TextBlock HorizontalAlignment="Left" Margin="41,38,0,0" Text="Aaaaand I'm looking for a..." TextWrapping="Wrap" VerticalAlignment="Top" Height="71" Width="688" FontFamily="Bahnschrift Light" FontSize="48"/>
 
                 </Grid>
             </TabItem>
@@ -95,12 +94,31 @@
                     <Button x:Name="leaveButton" Click="Shutdown" Content="Leave" HorizontalAlignment="Left" Margin="1158,646,0,0" VerticalAlignment="Top" Width="64" Height="64"/>
                     <Button x:Name="saveButton" Click="SaveMessageHistory" Content="Save" HorizontalAlignment="Left" Margin="839,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
                     <Button x:Name="addFriendButton" Content="Add as friend!" HorizontalAlignment="Left" Margin="967,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
-
+                    <Button x:Name="BlockButton" Content="Block user" HorizontalAlignment="Left" Margin="967,711,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
 
                 </Grid>
             </TabItem>
 
             <TabItem Header="FriendList" Background="{x:Null}" Opacity="0.5" x:Name="FriendListPage">
+                <Grid>
+                    <ListView Margin="0,0,790,0">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SelectSaveHistory" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                    </ListView>
+                    <Label Content="FriendList" HorizontalAlignment="Left" Margin="649,73,0,0" VerticalAlignment="Top" Height="84" Width="288" FontFamily="Bahnschrift Light Condensed" FontSize="48"/>
+                    <Label Content="Here You can see the friended users. Double click on them to remove from list." HorizontalAlignment="Left" Margin="661,190,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Bahnschrift Light Condensed"/>
+
+                </Grid>
 
             </TabItem>
 
@@ -120,7 +138,7 @@
                         </FlowDocument>
                     </RichTextBox>
 
-                    <ListView Margin="0,0,1027,112" x:Name="ChatHistoryListView" >
+                    <ListView Margin="0,0,1027,112" x:Name="ChatHistoryListView">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Date" DisplayMemberBinding="{Binding TimeString}"/>
@@ -128,15 +146,13 @@
                             </GridView>
                         </ListView.View>
 
-
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SelectSaveHistory" />
                             </Style>
                         </ListView.ItemContainerStyle>
-
-
                     </ListView>
+                    
                 </Grid>
 
             </TabItem>

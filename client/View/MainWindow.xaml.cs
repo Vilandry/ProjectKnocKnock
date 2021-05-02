@@ -166,27 +166,16 @@ namespace client
 
         private void SelectSaveHistory(object sender, MouseButtonEventArgs e)
         {
-            var item = sender as MessageHistoryEntry;
-            if (item != null && item.IsSelected)
-            {
-                Trace.WriteLine(item.Content);
-            }
-            /*ListViewItem entry = new ListViewItem();
-            entry.Content = ((ListViewItem)sender).Content + "i";
-            Trace.WriteLine(entry.Content);
-
-            this.ChatHistoryListView.Items.Add(entry);*/
+            var castedSender = sender as ListViewItem;
+            var item = castedSender.Content as MessageHistoryEntry;          
 
 
             loadedHistory.Document.Blocks.Clear();
             //var item = (MessageHistoryEntry)(sender as ListView).SelectedItem;
 
-            Trace.WriteLine(sender.ToString() + " vege");
-            Trace.WriteLine((sender is MessageHistoryEntry) + " vege");
-
             if (item != null)
             {
-                string res = misc.GetChatHistoryMessage(item.Content.ToString());
+                string res = misc.GetChatHistoryMessage(item.Entrystring.ToString());
 
                 string[] lines = res.Split("\n");
 
@@ -194,32 +183,60 @@ namespace client
                 {
                     if (line == "") { continue; }
                     Trace.WriteLine(line + " <- was the line");
-                    string username = line.Split(":", 2)[0];
-                    string Text = line.Split(":", 2)[1].Trim();
-                    string displayText = Utility.MessageFormatter(username, Text);
-                    this.Dispatcher.Invoke(() =>
+                    string displayText;
+                    if (!line.Contains(":"))
                     {
-                        Paragraph paragraph = new Paragraph();
-                        paragraph.Inlines.Add(new Run(displayText));
+                        displayText = line;
 
-                        if (username == curUser.Username)
+
+                        this.Dispatcher.Invoke(() =>
                         {
-                            paragraph.TextAlignment = TextAlignment.Right;
-                            paragraph.Foreground = Brushes.Orange;
-                        }
-                        else
-                        {
+                            Paragraph paragraph = new Paragraph();
+                            paragraph.Inlines.Add(new Run(displayText));
+
                             paragraph.TextAlignment = TextAlignment.Left;
                             paragraph.Foreground = Brushes.Purple;
-                        }
 
-                        this.loadedHistory.Document.Blocks.Add(paragraph);
+                            this.loadedHistory.Document.Blocks.Add(paragraph);
 
-                        this.loadedHistory.ScrollToEnd();
-                    });
+                            this.loadedHistory.ScrollToEnd();
+                        });
+                    }
+                    else
+                    {
+                        string username = line.Split(":", 2)[0];
+                        string Text = line.Split(":", 2)[1].Trim();
+                        displayText = Utility.MessageFormatter(username, Text);
+
+
+                        this.Dispatcher.Invoke(() =>
+                        {
+                            Paragraph paragraph = new Paragraph();
+                            paragraph.Inlines.Add(new Run(displayText));
+
+                            if (username == curUser.Username)
+                            {
+                                paragraph.TextAlignment = TextAlignment.Right;
+                                paragraph.Foreground = Brushes.Orange;
+                            }
+                            else
+                            {
+                                paragraph.TextAlignment = TextAlignment.Left;
+                                paragraph.Foreground = Brushes.Purple;
+                            }
+
+                            this.loadedHistory.Document.Blocks.Add(paragraph);
+
+                            this.loadedHistory.ScrollToEnd();
+                        });
+                    }
+
+                    
+                    
+                    
                 }
             }
-            else { Trace.WriteLine("shiiiiit"); }
+            else { Trace.WriteLine("item was empty!"); }
 
              
         }
@@ -435,34 +452,28 @@ namespace client
             this.saveButton.IsEnabled = false;
         }
 
-
-        public class MessageHistoryEntry : ListViewItem
+        public class MessageHistoryEntry
         {
+            public int EpochTime { get; private set; }
+            public string TimeString { get; private set; }
+            public string[] Usernames { get; private set; }
+            public string Partner { get; private set; }
 
+            string entrystring;
+            public string Entrystring
+            {
+                get { return entrystring; }
+                set
+                {
+                    entrystring = value;
 
-            public int EpochTime { get { return int.Parse(this.Content.ToString().Split("|")[0]); } }
-            public string[] Usernames { get { return this.Content.ToString().Split("|").Skip(1).ToArray(); } }
-            public string Partner { get { return this.Content.ToString().Split("|").Skip(1).ToArray()[0]; } }
-
-            public string Entrystring { get { return this.Content.ToString(); } set { this.Content = value; } }
-            public string TimeString { get {
-            Trace.WriteLine(this.Content.ToString().Split("|")[0] + "waaaaa" + this.Content.ToString());
-            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(int.Parse(this.Content.ToString().Split("|")[0]));
-            return dateTimeOffset.ToString(); } }
-
-            /*private string entrystring;
-            public bool IsSelected { get; set; }
-            public int EpochTime { get { return int.Parse(entrystring.Split("|")[0]); } }
-            public string[] Usernames { get { return entrystring.Split("|").Skip(1).ToArray(); } }
-            public string Partner { get { return entrystring.Split("|").Skip(1).ToArray()[0]; } }
-
-            public string Entrystring { get { return entrystring; } set { entrystring = value; } }
-            public string TimeString { get { 
-                    Trace.WriteLine(entrystring.Split("|")[0] + "waaaaa" + entrystring);
-                    DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(int.Parse(entrystring.Split("|")[0])); 
-                    return dateTimeOffset.ToString(); } }*/
-
-
+                    var parts = entrystring.Split("|");
+                    EpochTime = int.Parse(parts[0]);
+                    TimeString = DateTimeOffset.FromUnixTimeSeconds(EpochTime).ToString("0:MM/dd/yy H:mm:ss");
+                    Usernames = parts.Skip(1).ToArray();
+                    Partner = Usernames[0];
+                }
+            }
         }
     }
 }

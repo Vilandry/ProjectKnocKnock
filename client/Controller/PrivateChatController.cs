@@ -78,7 +78,16 @@ namespace client.Controller
                         curUser.LastPrivateChatHistory = "";
                         curUser.LastPrivateChatConversationId = verifyparams[1];
                         Trace.WriteLine("PrivateChat: verified! Conversationid: " + verifyparams[1]);
-                        curUser.LastPrivateChatUsername = verifyparams[1].Split("|")[2];
+
+                        if (curUser.Username == curUser.LastPrivateChatConversationId.Split("|")[1])
+                        {
+                            curUser.LastPrivateChatUsername = verifyparams[1].Split("|")[2];
+                        }
+                        else
+                        {
+                            curUser.LastPrivateChatUsername = verifyparams[1].Split("|")[1];
+                        }
+                        
                         curUser.HasOngoingChat = true;
 
                         client = new TcpClient(PortManager.instance().Host, chatport);
@@ -89,6 +98,11 @@ namespace client.Controller
 
                         Thread t = new Thread(handleReading);
                         t.Start();
+
+                        MessageArrivedEventArgs startMsg = new MessageArrivedEventArgs();
+                        startMsg.MessageSender = "SERVER";
+                        startMsg.Message = "!JOINED|" + curUser.LastPrivateChatUsername;
+                        OnMessageArrived(startMsg);
                         break;
                     }
                     else
@@ -231,7 +245,7 @@ namespace client.Controller
 
             if (commandargs[1] == "!LEFT")
             {
-                ShutDownChat();
+                ExitChat();
             }
             else
             {
@@ -323,6 +337,7 @@ namespace client.Controller
         protected virtual void OnLostConnection(EventArgs e)
         {
             lostConnection?.Invoke(this, e);
+            ShutDownChat();
         }
 
     }

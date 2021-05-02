@@ -52,6 +52,7 @@ namespace client.Controller
 
                 NetworkStream stream = client.GetStream();
                 byte[] idData = Encoding.Unicode.GetBytes("CONVSAVE|" + conversationID + "|" + sender);
+                Trace.WriteLine("CONVID: " + conversationID);
 
                 try
                 {

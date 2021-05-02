@@ -38,6 +38,10 @@ namespace client.Model
                 {
                     return commandargs[1] + " has disconnected!";
                 }
+                else if (commandargs[0] == "!JOINED")
+                {
+                    return commandargs[1] + " has joined!";
+                }
 
                 return "Messageformatter error";
             }
