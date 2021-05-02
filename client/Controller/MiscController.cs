@@ -41,6 +41,7 @@ namespace client.Controller
                 try
                 {
                     client = new TcpClient(PortManager.instance().Host, PortManager.instance().Miscport);
+
                 }
                 catch (Exception e)
                 {
@@ -51,11 +52,12 @@ namespace client.Controller
                 }
 
                 NetworkStream stream = client.GetStream();
-                byte[] idData = Encoding.Unicode.GetBytes("CONVSAVE|" + conversationID + "|" + sender);
-                Trace.WriteLine("CONVID: " + conversationID);
 
                 try
                 {
+                    
+                    byte[] idData = Encoding.Unicode.GetBytes("CONVSAVE|" + conversationID + "|" + sender);
+                    Trace.WriteLine("CONVID: " + conversationID);
                     stream.Write(idData);
                 }
                 catch(Exception e)
@@ -229,7 +231,143 @@ namespace client.Controller
             lostConnection?.Invoke(this, e);
         }
 
+        public bool SendBlockRequest(string blocker, string blocked)
+        {
+            bool success = false;
 
+            lock (llock)
+            {
+
+
+                try
+                {
+                    client = new TcpClient(PortManager.instance().Host, PortManager.instance().Miscport);
+                    Trace.WriteLine("here");
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("MiscController error: couldnt connect to server, error message: " + e.Message);
+                    EventArgs er = new EventArgs();
+                    OnLostConnection(er);
+                    return success;
+                }
+
+                NetworkStream stream = client.GetStream();
+                string msg = "BLOCK|" + blocker + "|" + blocked;
+                byte[] data = Encoding.Unicode.GetBytes(msg);
+
+                try
+                {
+                    stream.Write(data);
+                    Thread.Sleep(100);
+                    string result = Utility.ReadFromNetworkStream(stream);
+
+                    success = (result == "OK");
+
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("Error in sending block request: error message " + e.Message);
+                    client.Close();
+                    EventArgs er = new EventArgs();
+                    OnLostConnection(er);
+                    return false;
+                }
+            }
+            return success;
+        }
+
+        public bool SendFriendRequest(string friender, string friended)
+        {
+            bool success = false;
+
+            lock (llock)
+            {
+
+
+                try
+                {
+                    client = new TcpClient(PortManager.instance().Host, PortManager.instance().Miscport);
+                    Trace.WriteLine("here");
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("MiscController error: couldnt connect to server, error message: " + e.Message);
+                    EventArgs er = new EventArgs();
+                    OnLostConnection(er);
+                    return success;
+                }
+
+                NetworkStream stream = client.GetStream();
+                string msg = "FRIEND|" + friender + "|" + friended;
+                byte[] data = Encoding.Unicode.GetBytes(msg);
+
+                try
+                {
+                    stream.Write(data);
+                    Thread.Sleep(100);
+                    string result = Utility.ReadFromNetworkStream(stream);
+
+                    success = (result == "OK");
+
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("Error in sending block request: error message " + e.Message);
+                    client.Close();
+                    EventArgs er = new EventArgs();
+                    OnLostConnection(er);
+                    return false;
+                }
+            }
+            return success;
+        }
+
+        public string GetFriendLists(string username)
+        {
+            string message = "FRIENDLOAD|" + username;
+            string reply = "!!";
+
+            bool success = false;
+
+            lock (llock)
+            {
+
+
+                try
+                {
+                    client = new TcpClient(PortManager.instance().Host, PortManager.instance().Miscport);
+                    Trace.WriteLine("here");
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("MiscController error: couldnt connect to server, error message: " + e.Message);
+                    EventArgs er = new EventArgs();
+                    OnLostConnection(er);
+                    return "!!";
+                }
+
+                NetworkStream stream = client.GetStream();
+                byte[] data = Encoding.Unicode.GetBytes(message);
+
+                try
+                {
+                    stream.Write(data);
+                    Thread.Sleep(100);
+                    reply = Utility.ReadFromNetworkStream(stream);
+                    Trace.WriteLine("The friendlist request's result: " + reply);
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("Error in sending block request: error message " + e.Message);
+                    client.Close();
+                    EventArgs er = new EventArgs();
+                    OnLostConnection(er);
+                    return "!!";
+                }
+            }
+            return reply;
+        }
     }
 
 

@@ -80,8 +80,9 @@ namespace client
             {
                 this.saveButton.Visibility = Visibility.Visible;
                 this.addFriendButton.Visibility = Visibility.Visible;
+                this.BlockButton.Visibility = Visibility.Visible;
 
-                if(curUser.LastPrivateChatHistory != "")
+                if (curUser.LastPrivateChatHistory != "")
                 {
                     this.saveButton.IsEnabled = true;
                 }
@@ -114,6 +115,7 @@ namespace client
                 this.addFriendButton.Visibility = Visibility.Hidden;
                 this.leaveButton.Visibility = Visibility.Visible;
                 this.sendPrivateMessageButton.Visibility = Visibility.Visible;
+                this.BlockButton.Visibility = Visibility.Hidden;
 
                 this.leaveButton.IsEnabled = true;
                 this.sendPrivateMessageButton.IsEnabled = true;
@@ -240,6 +242,20 @@ namespace client
 
              
         }
+
+        private void BlockLastChatMate(object sender, RoutedEventArgs e)
+        {
+            this.addFriendButton.IsEnabled = false;
+            misc.SendBlockRequest(curUser.Username, curUser.LastPrivateChatUsername);
+        }
+
+        private void AddLastChatMate(object sender, RoutedEventArgs e)
+        {
+            this.BlockButton.IsEnabled = false;
+            misc.SendFriendRequest(curUser.Username, curUser.LastPrivateChatUsername);
+        }
+
+        
 
         private void loginAttempt(Object sender, RoutedEventArgs e)
         {                
@@ -416,6 +432,17 @@ namespace client
 
                 entry.Entrystring = history;
 
+                string[] elements = history.Split("|");
+
+                if(elements[1] == curUser.Username)
+                {
+                    entry.Partner = elements[2];
+                }
+                else if(elements[2] == curUser.Username)
+                {
+                    entry.Partner = elements[1];
+                }
+
                 ChatHistoryListView.Items.Add(entry);
             }
 
@@ -423,11 +450,34 @@ namespace client
 
         }
 
+        private void BeginFriendList()
+        {
+            string list = misc.GetFriendLists(curUser.Username);
+
+            string[] mutualList = list.Split("!")[0].Split("|");
+            string[] onlyLovedBySenderList = list.Split("!")[1].Split("|");
+            string[] onlySenderLovedByList = list.Split("!")[2].Split("|");
+
+            foreach (string name in mutualList)
+            {
+                this.MutualFriendList.Items.Add(name);
+            }
+
+            foreach (string name in onlyLovedBySenderList)
+            {
+                this.LovedBySenderFriendList.Items.Add(name);
+            }
+
+            foreach (string name in onlySenderLovedByList)
+            {
+                this.SenderLovedByFriendList.Items.Add(name);
+            }
+        }
+
         private void displayButtons()
         {
             this.groupChatButton.Visibility = Visibility.Visible;
             this.soloSearchButton.Visibility = Visibility.Visible;
-            this.optionsButton.Visibility = Visibility.Visible;
             this.logoutButton.Visibility = Visibility.Visible;
         }
 
@@ -435,7 +485,6 @@ namespace client
         {
             this.groupChatButton.Visibility = Visibility.Hidden;
             this.soloSearchButton.Visibility = Visibility.Hidden;
-            this.optionsButton.Visibility = Visibility.Hidden;
             this.logoutButton.Visibility = Visibility.Hidden;
         }
 
@@ -457,7 +506,7 @@ namespace client
             public int EpochTime { get; private set; }
             public string TimeString { get; private set; }
             public string[] Usernames { get; private set; }
-            public string Partner { get; private set; }
+            public string Partner { get; set; }
 
             string entrystring;
             public string Entrystring
@@ -471,7 +520,6 @@ namespace client
                     EpochTime = int.Parse(parts[0]);
                     TimeString = DateTimeOffset.FromUnixTimeSeconds(EpochTime).ToString("0:MM/dd/yy H:mm:ss");
                     Usernames = parts.Skip(1).ToArray();
-                    Partner = Usernames[0];
                 }
             }
         }

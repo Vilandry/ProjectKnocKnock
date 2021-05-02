@@ -93,30 +93,46 @@
                     <Button x:Name="sendPrivateMessageButton" Click="sendPrivateMessage" Content="" HorizontalAlignment="Left" Margin="697,646,0,0" VerticalAlignment="Top" Height="64" Width="64" IsDefault="True"/>
                     <Button x:Name="leaveButton" Click="Shutdown" Content="Leave" HorizontalAlignment="Left" Margin="1158,646,0,0" VerticalAlignment="Top" Width="64" Height="64"/>
                     <Button x:Name="saveButton" Click="SaveMessageHistory" Content="Save" HorizontalAlignment="Left" Margin="839,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
-                    <Button x:Name="addFriendButton" Content="Add as friend!" HorizontalAlignment="Left" Margin="967,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
-                    <Button x:Name="BlockButton" Content="Block user" HorizontalAlignment="Left" Margin="967,711,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
+                    <Button x:Name="addFriendButton"  Click="AddLastChatMate" Content="Add as friend!" HorizontalAlignment="Left" Margin="967,646,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
+                    <Button x:Name="BlockButton" Click="BlockLastChatMate" Content="Block user" HorizontalAlignment="Left" Margin="967,711,0,0" VerticalAlignment="Top" Height="64" Width="128"/>
 
                 </Grid>
             </TabItem>
 
             <TabItem Header="FriendList" Background="{x:Null}" Opacity="0.5" x:Name="FriendListPage">
                 <Grid>
-                    <ListView Margin="0,0,790,0">
+                    <ListView x:Name="MutualFriendList" Margin="0,0,790,537">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn/>
                             </GridView>
                         </ListView.View>
 
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <EventSetter Event="PreviewMouseLeftButtonDown" Handler="SelectSaveHistory" />
-                            </Style>
-                        </ListView.ItemContainerStyle>
+                    </ListView>
+
+
+                    <ListView x:Name="LovedBySenderFriendList" Margin="1,258,790,276">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
 
                     </ListView>
-                    <Label Content="FriendList" HorizontalAlignment="Left" Margin="649,73,0,0" VerticalAlignment="Top" Height="84" Width="288" FontFamily="Bahnschrift Light Condensed" FontSize="48"/>
-                    <Label Content="Here You can see the friended users. Double click on them to remove from list." HorizontalAlignment="Left" Margin="661,190,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Bahnschrift Light Condensed"/>
+
+                    <ListView x:Name="SenderLovedByFriendList" Margin="1,524,790,10">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+
+                    </ListView>
+
+                    <Label Content="FriendList" HorizontalAlignment="Left" Margin="493,10,0,0" VerticalAlignment="Top" Height="84" Width="288" FontFamily="Bahnschrift Light Condensed" FontSize="48"/>
+                    <Label Content="Here You can see the friended users." HorizontalAlignment="Left" Margin="493,190,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Bahnschrift Light Condensed"/>
+                    <Label Content="List of users You liked" HorizontalAlignment="Center" Margin="0,451,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Bahnschrift Light Condensed"/>
+                    <Label Content="List of users liked You" HorizontalAlignment="Center" Margin="0,717,0,0" VerticalAlignment="Top" FontSize="36" FontFamily="Bahnschrift Light Condensed"/>
 
                 </Grid>
 
@@ -152,7 +168,7 @@
                             </Style>
                         </ListView.ItemContainerStyle>
                     </ListView>
-                    
+
                 </Grid>
 
             </TabItem>
@@ -176,15 +192,9 @@
 
         </Button>
 
-        <Button x:Name="groupChatButton" Click="BeginHistory" Content="" HorizontalAlignment="Left" Margin="7,115,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0">
+        <Button x:Name="groupChatButton"  Click="BeginFriendList" Content="" HorizontalAlignment="Left" Margin="7,115,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0">
             <Button.Background>
                 <ImageBrush ImageSource="/images/group.png"/>
-            </Button.Background>
-        </Button>
-
-        <Button x:Name="optionsButton" Content="" HorizontalAlignment="Left" Margin="7,220,0,0" VerticalAlignment="Top" Height="100" Width="100" Grid.ColumnSpan="2"  BorderThickness="0,0,0,0">
-            <Button.Background>
-                <ImageBrush ImageSource="/images/options.png"/>
             </Button.Background>
         </Button>
 
@@ -199,6 +209,8 @@
                 <ImageBrush ImageSource="/images/door.png"/>
             </Button.Background>
         </Button>
+
+        <Button Content="Message history"  Click="BeginHistory" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Height="82" Width="90"/>
 
 
     </Grid>
