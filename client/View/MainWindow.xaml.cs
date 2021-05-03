@@ -81,6 +81,7 @@ namespace client
                 this.saveButton.Visibility = Visibility.Visible;
                 this.addFriendButton.Visibility = Visibility.Visible;
                 this.BlockButton.Visibility = Visibility.Visible;
+                this.messageTextBox.IsEnabled = false;
 
                 if (curUser.LastPrivateChatHistory != "")
                 {
@@ -116,6 +117,7 @@ namespace client
                 this.leaveButton.Visibility = Visibility.Visible;
                 this.sendPrivateMessageButton.Visibility = Visibility.Visible;
                 this.BlockButton.Visibility = Visibility.Hidden;
+                this.messageTextBox.IsEnabled = true;
 
                 this.leaveButton.IsEnabled = true;
                 this.sendPrivateMessageButton.IsEnabled = true;
@@ -262,7 +264,15 @@ namespace client
         private void loginAttempt(Object sender, RoutedEventArgs e)
         {                
             curUser.Username = LoginNameBox.Text;            
-            string pwd = LoginPasswordBox.Password;                              
+            string pwd = LoginPasswordBox.Password;
+
+
+            if(!login.CheckAlphanumericCharacters(curUser.Username))
+            {
+                ErrorWindow popup = new ErrorWindow("Wrong username or password! Make sure You registered with this username and did not misstype the password!");
+                popup.ShowDialog();
+                return;
+            }
             int success = login.tryLogin(curUser, pwd);                
 
                 
