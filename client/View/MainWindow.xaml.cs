@@ -246,12 +246,14 @@ namespace client
         private void BlockLastChatMate(object sender, RoutedEventArgs e)
         {
             this.addFriendButton.IsEnabled = false;
+            this.BlockButton.IsEnabled = false;
             misc.SendBlockRequest(curUser.Username, curUser.LastPrivateChatUsername);
         }
 
         private void AddLastChatMate(object sender, RoutedEventArgs e)
         {
             this.BlockButton.IsEnabled = false;
+            this.addFriendButton.IsEnabled = false;
             misc.SendFriendRequest(curUser.Username, curUser.LastPrivateChatUsername);
         }
 
@@ -450,28 +452,48 @@ namespace client
 
         }
 
-        private void BeginFriendList()
+        private void ExitApp(object sender, RoutedEventArgs e)
+        {
+            privatechat.ExitChat();
+            BeforeLogin.IsSelected = true;
+        }
+
+        private void BeginFriendList(object sender, RoutedEventArgs e)
         {
             string list = misc.GetFriendLists(curUser.Username);
 
             string[] mutualList = list.Split("!")[0].Split("|");
             string[] onlyLovedBySenderList = list.Split("!")[1].Split("|");
             string[] onlySenderLovedByList = list.Split("!")[2].Split("|");
+            this.MutualFriendList.Items.Clear();
+            this.LovedBySenderFriendList.Items.Clear();
+            this.LovedBySenderFriendList.Items.Clear();
+
 
             foreach (string name in mutualList)
             {
-                this.MutualFriendList.Items.Add(name);
+                if(name == "") { continue; }
+                ListViewItem entry = new ListViewItem();
+                entry.Content = name;
+                this.MutualFriendList.Items.Add(entry);
             }
 
             foreach (string name in onlyLovedBySenderList)
             {
-                this.LovedBySenderFriendList.Items.Add(name);
+                if (name == "") { continue; }
+                ListViewItem entry = new ListViewItem();
+                entry.Content = name;
+                this.LovedBySenderFriendList.Items.Add(entry);
             }
 
             foreach (string name in onlySenderLovedByList)
             {
-                this.SenderLovedByFriendList.Items.Add(name);
+                if (name == "") { continue; }
+                ListViewItem entry = new ListViewItem();
+                entry.Content = name;
+                this.SenderLovedByFriendList.Items.Add(entry);
             }
+            this.FriendListPage.IsSelected = true;
         }
 
         private void displayButtons()

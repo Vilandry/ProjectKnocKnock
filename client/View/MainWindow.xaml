@@ -17,7 +17,7 @@
         </Grid.Background>
         <TabControl Background="#4CEAEAEA" x:Name="MainTab" Margin="112,0,10,10" BorderBrush="{x:Null}" >
 
-            <TabItem Header="BeforeLogin" Background="{x:Null}" Opacity="100" x:Name="BeforeLogin" BorderBrush="{x:Null}">
+            <TabItem Header="BeforeLogin" Background="{x:Null}" Opacity="100" x:Name="BeforeLogin" BorderBrush="{x:Null}" Visibility="Hidden">
                 <Grid Visibility="Visible">
                     <Button Click="loginAttempt" x:Name="LoginButton" Content="Log in!" HorizontalAlignment="Left" Margin="43,638,0,0" VerticalAlignment="Top" Height="69" Width="347" FontFamily="Bahnschrift Light" FontSize="22"/>
 
@@ -44,7 +44,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="MainMenu" Background="{x:Null}" Opacity="0.5" x:Name="MainMenu">
+            <TabItem Header="MainMenu" Background="{x:Null}" Opacity="0.5" x:Name="MainMenu" Visibility="Hidden">
                 <Grid>
 
                     <RadioButton x:Name="lookingForFemale" Content="Female." Margin="99,135,994,460" IsChecked="True" GroupName="lookingfor" FontFamily="Bahnschrift Light">
@@ -77,7 +77,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="PrivateChat" Background="{x:Null}" Opacity="0.5" x:Name="PrivateChat">
+            <TabItem Header="PrivateChat" Background="{x:Null}" Opacity="0.5" x:Name="PrivateChat" Visibility="Hidden">
                 <Grid>
 
                     <RichTextBox x:Name="privateChatHistory" Margin="77,0,104,152" >
@@ -99,7 +99,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="FriendList" Background="{x:Null}" Opacity="0.5" x:Name="FriendListPage">
+            <TabItem Header="FriendList" Background="{x:Null}" Opacity="0.5" x:Name="FriendListPage" Visibility="Hidden">
                 <Grid>
                     <ListView x:Name="MutualFriendList" Margin="0,0,790,537">
                         <ListView.View>
@@ -138,11 +138,11 @@
 
             </TabItem>
 
-            <TabItem Header="BlockList" Background="{x:Null}" Opacity="0.5" x:Name="BlockListPage">
+            <TabItem Header="BlockList" Background="{x:Null}" Opacity="0.5" x:Name="BlockListPage" Visibility="Hidden">
 
             </TabItem>
 
-            <TabItem Header="MessageHistory" Background="{x:Null}" Opacity="0.5" x:Name="MessageHistoryPage">
+            <TabItem Header="MessageHistory" Background="{x:Null}" Opacity="0.5" x:Name="MessageHistoryPage" Visibility="Hidden">
                 <Grid Height="742" Margin="0,0,4,0">
 
 

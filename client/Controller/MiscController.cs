@@ -328,8 +328,6 @@ namespace client.Controller
             string message = "FRIENDLOAD|" + username;
             string reply = "!!";
 
-            bool success = false;
-
             lock (llock)
             {
 
