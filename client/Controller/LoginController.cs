@@ -85,7 +85,7 @@ namespace client.Controller
                 string message = "LOGIN" + "|" + user.Username + "|" + Utility.CreateMD5(pwd);
                 Trace.WriteLine("Login attempt with this data: " + message);
 
-                byte[] data = Encoding.Unicode.GetBytes(message);
+                byte[] data = Encoding.Unicode.GetBytes("KNOCKNOCK|" + message);
 
                 NetworkStream stream = client.GetStream();
 
@@ -142,7 +142,7 @@ namespace client.Controller
                 }
 
                 string message = "REGISTER" + "|" + user.Username + "|" + Utility.CreateMD5(pwd) + "|" + (int)user.AgeCategory + "|" + (int)user.Gender;
-                Byte[] data = Encoding.Unicode.GetBytes(message);
+                Byte[] data = Encoding.Unicode.GetBytes("KNOCKNOCK|" + message);
 
 
                 NetworkStream stream = client.GetStream();

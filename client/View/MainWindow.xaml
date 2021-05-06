@@ -8,6 +8,11 @@
         Closing="Shutdown"
         >
 
+    <Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Close"
+                        Executed="CloseCommandHandler"/>
+    </Window.CommandBindings>
+
     <Grid>
 
 
@@ -204,14 +209,24 @@
             </Button.Background>
         </Button>
 
-        <Button x:Name="logoutButton" Content="" HorizontalAlignment="Left" Margin="0,682,0,0" VerticalAlignment="Top" Height="100" Width="100"  BorderThickness="0,0,0,0">
+        <!-- <Button x:Name="logoutButton" Content="" HorizontalAlignment="Left" Margin="0,682,0,0" VerticalAlignment="Top" Height="100" Width="100"  BorderThickness="0,0,0,0">
             <Button.Background>
                 <ImageBrush ImageSource="/images/door.png"/>
             </Button.Background>
-        </Button>
+        </Button> -->
 
-        <Button Content="Message history"  Click="BeginHistory" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Height="82" Width="90"/>
+        <Button x:Name="messageHistoryButton"  Content="Message history"  Click="BeginHistory" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Height="82" Width="90"/>
 
+        
+        <StackPanel Name="MainStackPanel">
+
+            <Button x:Name="logoutButton"  Command="ApplicationCommands.Close" Content="" HorizontalAlignment="Left" Margin="0,682,0,0" VerticalAlignment="Top" Height="100" Width="100"  BorderThickness="0,0,0,0">
+                <Button.Background>
+                    <ImageBrush ImageSource="/images/door.png"/>
+                </Button.Background>
+            </Button>
+
+        </StackPanel>
 
     </Grid>
 </Window>

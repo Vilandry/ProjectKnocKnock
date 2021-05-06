@@ -103,6 +103,11 @@ namespace client.Controller
                         startMsg.MessageSender = "SERVER";
                         startMsg.Message = "!JOINED|" + curUser.LastPrivateChatUsername;
                         OnMessageArrived(startMsg);
+
+                        MessageArrivedEventArgs startMsg2 = new MessageArrivedEventArgs();
+                        startMsg2.MessageSender = "SERVER";
+                        startMsg2.Message = "!JOINED|" + curUser.Username;
+                        OnMessageArrived(startMsg2);
                         break;
                     }
                     else
@@ -141,7 +146,7 @@ namespace client.Controller
                     return false;
                 }
 
-                byte[] data = Encoding.Unicode.GetBytes(msg);
+                byte[] data = Encoding.Unicode.GetBytes("KNOCKNOCK|" + msg);
                 stream.Write(data, 0, data.Length);
 
                 string responseData = Utility.ReadFromNetworkStream(stream);
@@ -176,7 +181,7 @@ namespace client.Controller
                     string toBeSend = username + "|" + message;
                     Trace.WriteLine("Privatechat message sent: " + message);
 
-                    byte[] buffer = Encoding.Unicode.GetBytes(toBeSend);
+                    byte[] buffer = Encoding.Unicode.GetBytes("KNOCKNOCK|" + toBeSend);
                     stream.Write(buffer);
                 }
                 catch(Exception e)
@@ -262,14 +267,14 @@ namespace client.Controller
             {
                 return;
             }
-            if (curUser.HasOngoingChat || curUser.HasOngoingChatSearch)
+            if (curUser.HasOngoingChat)
             {
                 //client.Connect(PortManager.instance().Host, PortManager.instance().Matchport);
                 try
                 {
                     NetworkStream stream = client.GetStream();
                     string msg = "!LEAVE|" + curUser.Username;
-                    byte[] buffer = Encoding.Unicode.GetBytes(msg);
+                    byte[] buffer = Encoding.Unicode.GetBytes("KNOCKNOCK|" + msg);
                     stream.Write(buffer);
                     Trace.WriteLine(msg + " sent!");
                 }
@@ -283,14 +288,60 @@ namespace client.Controller
 
                     curUser.HasOngoingChat = false;
 
-                    EventArgs e = new EventArgs();
+                    MessageArrivedEventArgs e = new MessageArrivedEventArgs();
+                    e.MessageSender = "SERVER";
+                    e.Message = "!LEFT|" + curUser.Username;
+                    OnMessageArrived(e);
+
+                    EventArgs em = new EventArgs();
                     //e.ConverastionId = curUser.LastPrivateChatConversationId;
-                    OnChatEnded(e);
+                    OnChatEnded(em);
                 }
             }
 
         }
 
+
+        public void LeaveQueue()
+        {
+            if (client == null)
+            {
+                return;
+            }
+            if (curUser.HasOngoingChatSearch)
+            {
+                //client.Connect(PortManager.instance().Host, PortManager.instance().Matchport);
+                try
+                {
+                    NetworkStream stream = client.GetStream();
+                    string msg = "!LEAVE|" + curUser.Username;
+                    byte[] buffer = Encoding.Unicode.GetBytes("KNOCKNOCK|" + msg);
+                    stream.Write(buffer);
+                    Trace.WriteLine(msg + " sent!");
+                }
+                catch (Exception e)
+                {
+                    Trace.WriteLine("exiting with error on exitchat error msg: " + e.Message);
+                }
+                finally
+                {
+                    client.Close();
+
+                    curUser.HasOngoingChat = false;
+                    curUser.HasOngoingChatSearch = false;
+
+                    /*MessageArrivedEventArgs e = new MessageArrivedEventArgs();
+                    e.MessageSender = "SERVER";
+                    e.Message = "LEFT|" + curUser.Username;
+                    //OnMessageArrived(e);
+
+                    EventArgs em = new EventArgs();
+                    //e.ConverastionId = curUser.LastPrivateChatConversationId;
+                    OnChatEnded(em);*/
+                }
+            }
+
+        }
         /// <summary>
         /// when the partner left the chat
         /// </summary>

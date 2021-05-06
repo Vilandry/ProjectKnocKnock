@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows.Input;
 
 namespace client.Model
 {
@@ -31,9 +32,11 @@ namespace client.Model
 
         public static string MessageFormatter(string username, string message)
         {
+            Trace.WriteLine("username: " + username + "msg: " + message);
             if(username == "SERVER")
             {
                 string[] commandargs = message.Split("|");
+                Trace.WriteLine(commandargs[0] + "___" + commandargs[1]);
                 if(commandargs[0] == "!LEFT")
                 {
                     return commandargs[1] + " has disconnected!";
@@ -141,6 +144,7 @@ namespace client.Model
         /// </summary>
         public string MessageSender { get { return msgsender; } set { msgsender = value; } }
     }
+
 
     public enum AGECATEGORY
     {

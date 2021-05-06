@@ -265,6 +265,7 @@ namespace client
         {                
             curUser.Username = LoginNameBox.Text;            
             string pwd = LoginPasswordBox.Password;
+            LoginPasswordBox.Password = "";
 
 
             if(!login.CheckAlphanumericCharacters(curUser.Username))
@@ -298,7 +299,7 @@ namespace client
         {
             curUser.Username = SignupNameBox.Text;
             string pwd = SignupPasswordBox.Password;
-
+            SignupPasswordBox.Password = "";
 
             Trace.WriteLine("\n\n\n" + Utility.CreateMD5(pwd) + "\n\n\n");
 
@@ -330,7 +331,7 @@ namespace client
             }
 
 
-            if( ! login.CheckAlphanumericCharacters(curUser.Username) || curUser.Username.Length < 4)
+            if( ! login.CheckAlphanumericCharacters(curUser.Username) || curUser.Username.Length < 4 || curUser.Username == "SERVER")
             {
                 ErrorWindow popup = new ErrorWindow("Your name contains illegal characters! Make sure to use only letters and numbers! Also Your username must be at least 4 character long");
                 popup.ShowDialog();
@@ -405,7 +406,7 @@ namespace client
             if (curUser.HasOngoingChatSearch || curUser.HasOngoingChat)
             {
                 this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
-                privatechat.ExitChat(); ///at this time, its still on the matchmanager
+                privatechat.LeaveQueue(); ///at this time, its still on the matchmanager
                 curUser.HasOngoingChatSearch = false;
                 curUser.HasOngoingChat = false;
                 Thread.Sleep(500);
@@ -431,11 +432,13 @@ namespace client
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
         {
             MainMenu.IsSelected = true;
+            privatechat.ExitChat();
         }
 
         private void BeginHistory(object sender, RoutedEventArgs e)
         {           
             MessageHistoryPage.IsSelected = true;
+            privatechat.ExitChat();
             string[] histories = misc.GetUserHistoryIDs(curUser.Username);
 
             foreach(string history in histories)
@@ -471,6 +474,7 @@ namespace client
         private void BeginFriendList(object sender, RoutedEventArgs e)
         {
             string list = misc.GetFriendLists(curUser.Username);
+            privatechat.ExitChat();
 
             string[] mutualList = list.Split("!")[0].Split("|");
             string[] onlyLovedBySenderList = list.Split("!")[1].Split("|");
@@ -511,6 +515,7 @@ namespace client
             this.groupChatButton.Visibility = Visibility.Visible;
             this.soloSearchButton.Visibility = Visibility.Visible;
             this.logoutButton.Visibility = Visibility.Visible;
+            this.messageHistoryButton.Visibility = Visibility.Visible;
         }
 
         private void hideButtons()
@@ -518,11 +523,18 @@ namespace client
             this.groupChatButton.Visibility = Visibility.Hidden;
             this.soloSearchButton.Visibility = Visibility.Hidden;
             this.logoutButton.Visibility = Visibility.Hidden;
+            this.messageHistoryButton.Visibility = Visibility.Hidden;
         }
 
         private void Shutdown(object sender, EventArgs e)
         {
             privatechat.ExitChat();
+        }
+
+        private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            privatechat.ExitChat();
+            this.Close();
         }
 
         private void SaveMessageHistory(object sender, RoutedEventArgs e)

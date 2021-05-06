@@ -56,7 +56,7 @@ namespace client.Controller
                 try
                 {
                     
-                    byte[] idData = Encoding.Unicode.GetBytes("CONVSAVE|" + conversationID + "|" + sender);
+                    byte[] idData = Encoding.Unicode.GetBytes("KNOCKNOCK|" + "CONVSAVE|" + conversationID + "|" + sender);
                     Trace.WriteLine("CONVID: " + conversationID);
                     stream.Write(idData);
                 }
@@ -79,7 +79,7 @@ namespace client.Controller
                     }
                     else if(attemptResult == "INSERT")
                     {
-                        byte[] data = Encoding.Unicode.GetBytes(/*"INSERTHISTORY|" +*/ history);
+                        byte[] data = Encoding.Unicode.GetBytes(/*"INSERTHISTORY|" +*/ "KNOCKNOCK|" + history);
 
 
                         //StreamWriter writer = new StreamWriter(stream);
@@ -125,7 +125,7 @@ namespace client.Controller
                 }
 
                 NetworkStream stream = client.GetStream();
-                byte[] idData = Encoding.Unicode.GetBytes("LISTLOAD|" + username);
+                byte[] idData = Encoding.Unicode.GetBytes("KNOCKNOCK|" + "LISTLOAD|" + username);
 
                 try
                 {
@@ -191,7 +191,7 @@ namespace client.Controller
                 Trace.WriteLine("heree");
 
                 NetworkStream stream = client.GetStream();
-                byte[] idData = Encoding.Unicode.GetBytes("CONVLOAD|" + convID);
+                byte[] idData = Encoding.Unicode.GetBytes("KNOCKNOCK|" + "CONVLOAD|" + convID);
 
                 try
                 {
@@ -254,7 +254,7 @@ namespace client.Controller
 
                 NetworkStream stream = client.GetStream();
                 string msg = "BLOCK|" + blocker + "|" + blocked;
-                byte[] data = Encoding.Unicode.GetBytes(msg);
+                byte[] data = Encoding.Unicode.GetBytes("KNOCKNOCK|" + msg);
 
                 try
                 {
@@ -300,7 +300,7 @@ namespace client.Controller
 
                 NetworkStream stream = client.GetStream();
                 string msg = "FRIEND|" + friender + "|" + friended;
-                byte[] data = Encoding.Unicode.GetBytes(msg);
+                byte[] data = Encoding.Unicode.GetBytes("KNOCKNOCK|" + msg);
 
                 try
                 {
@@ -346,7 +346,7 @@ namespace client.Controller
                 }
 
                 NetworkStream stream = client.GetStream();
-                byte[] data = Encoding.Unicode.GetBytes(message);
+                byte[] data = Encoding.Unicode.GetBytes("KNOCKNOCK|" + message);
 
                 try
                 {
