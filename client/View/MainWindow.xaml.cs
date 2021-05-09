@@ -455,9 +455,9 @@ namespace client
 
             foreach(string history in histories)
             {
-                MessageHistoryEntry entry = new MessageHistoryEntry();
-
-                entry.Entrystring = history;
+                   MessageHistoryEntry entry = new MessageHistoryEntry();
+                   ChatHistoryListView.Items.Clear();
+                   entry.Entrystring = history;
 
                 string[] elements = history.Split("|");
 
