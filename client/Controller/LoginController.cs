@@ -78,6 +78,11 @@ namespace client.Controller
         {
             try
             {
+                if(CheckAlphanumericCharacters( user.Username) == false || user.Username.Length < 4 || pwd.Length < 4)///early users could use 4 letter long passwords
+                {
+                    return 0;
+                }
+
                 ForcedReconnect();
                 int success = 0;
 

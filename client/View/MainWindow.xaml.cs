@@ -81,6 +81,11 @@ namespace client
                 this.saveButton.Visibility = Visibility.Visible;
                 this.addFriendButton.Visibility = Visibility.Visible;
                 this.BlockButton.Visibility = Visibility.Visible;
+
+                this.saveButton.IsEnabled = true;
+                this.addFriendButton.IsEnabled = true;
+                this.BlockButton.IsEnabled = true;
+
                 this.messageTextBox.IsEnabled = false;
 
                 if (curUser.LastPrivateChatHistory != "")
@@ -136,6 +141,11 @@ namespace client
                 popup.ShowDialog();
                
             });
+
+            curUser.HasOngoingChat = false;
+            curUser.HasOngoingChatSearch = false;
+            privatechat.ExitChat();
+            privatechat.LeaveQueue();
         }
         
         #endregion
@@ -420,6 +430,8 @@ namespace client
 
         }
 
+        #region Tabchanging buttons
+
         private void sendPrivateMessage(object sender, RoutedEventArgs e)
         {
 
@@ -465,12 +477,6 @@ namespace client
 
         }
 
-        private void ExitApp(object sender, RoutedEventArgs e)
-        {
-            privatechat.ExitChat();
-            BeforeLogin.IsSelected = true;
-        }
-
         private void BeginFriendList(object sender, RoutedEventArgs e)
         {
             string list = misc.GetFriendLists(curUser.Username);
@@ -486,7 +492,7 @@ namespace client
 
             foreach (string name in mutualList)
             {
-                if(name == "") { continue; }
+                if (name == "") { continue; }
                 ListViewItem entry = new ListViewItem();
                 entry.Content = name;
                 this.MutualFriendList.Items.Add(entry);
@@ -509,6 +515,8 @@ namespace client
             }
             this.FriendListPage.IsSelected = true;
         }
+
+        #endregion
 
         private void displayButtons()
         {

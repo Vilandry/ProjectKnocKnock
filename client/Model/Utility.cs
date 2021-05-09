@@ -54,25 +54,6 @@ namespace client.Model
             }          
         }
 
-        /*public static string ReadFromNetworkStream(NetworkStream stream)
-        {
-            byte[] bytes = new Byte[256];
-            string message = null;
-            int i = 0, byteCount = 0;
-            do
-            {
-                i = stream.Read(bytes, 0, bytes.Length);
-                Console.WriteLine(i);
-                // Translate data bytes to a ASCII string.
-                message = Encoding.Unicode.GetString(bytes, byteCount, i);
-                byteCount += i;
-            } while (stream.DataAvailable);
-            Trace.WriteLine("\nUTILITY: read from networkstream: " + message + "\n");
-            
-
-            return message;
-        }*/
-
         public static string ReadFromNetworkStream(NetworkStream stream)
         {
             byte[] bytes;
