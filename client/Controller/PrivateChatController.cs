@@ -148,6 +148,7 @@ namespace client.Controller
 
                 byte[] data = Encoding.Unicode.GetBytes("KNOCKNOCK|" + msg);
                 stream.Write(data, 0, data.Length);
+                Thread.Sleep(10);
 
                 string responseData = Utility.ReadFromNetworkStream(stream);
 
@@ -317,6 +318,7 @@ namespace client.Controller
                     string msg = "!LEAVE|" + curUser.Username;
                     byte[] buffer = Encoding.Unicode.GetBytes("KNOCKNOCK|" + msg);
                     stream.Write(buffer);
+                    Thread.Sleep(10);
                     Trace.WriteLine(msg + " sent!");
                 }
                 catch (Exception e)

@@ -43,7 +43,7 @@ namespace client
 
             if(username != curUser.Username)
             {
-                Console.Beep();
+                //Console.Beep();
             }
 
             string text = msg.Message;
@@ -479,6 +479,7 @@ namespace client
 
         private void BeginFriendList(object sender, RoutedEventArgs e)
         {
+            this.FriendListPage.IsSelected = true;
             string list = misc.GetFriendLists(curUser.Username);
             privatechat.ExitChat();
 
@@ -487,7 +488,7 @@ namespace client
             string[] onlySenderLovedByList = list.Split("!")[2].Split("|");
             this.MutualFriendList.Items.Clear();
             this.LovedBySenderFriendList.Items.Clear();
-            this.LovedBySenderFriendList.Items.Clear();
+            this.SenderLovedByFriendList.Items.Clear();
 
 
             foreach (string name in mutualList)
@@ -512,8 +513,7 @@ namespace client
                 ListViewItem entry = new ListViewItem();
                 entry.Content = name;
                 this.SenderLovedByFriendList.Items.Add(entry);
-            }
-            this.FriendListPage.IsSelected = true;
+            }            
         }
 
         #endregion
