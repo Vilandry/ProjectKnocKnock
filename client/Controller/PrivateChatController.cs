@@ -163,6 +163,8 @@ namespace client.Controller
                     if(errargs[1] == "INQUEUE")
                     {
                         Trace.WriteLine("Already in queue!");
+                        EventArgs er = new EventArgs();
+                        OnInQueue(er);
                     }
                 }
             }
@@ -339,7 +341,7 @@ namespace client.Controller
                 {
                     client.Close();
 
-                    curUser.HasOngoingChat = false;
+                    ExitChat();
                     curUser.HasOngoingChatSearch = false;
 
                     /*MessageArrivedEventArgs e = new MessageArrivedEventArgs();
@@ -410,5 +412,6 @@ namespace client.Controller
             curUser.HasOngoingChatSearch = false;
         }
 
+        public TcpClient Client { get { return client; } }
     }
 }

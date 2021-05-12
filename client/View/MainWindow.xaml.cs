@@ -133,15 +133,20 @@ namespace client
 
         public void OnAlreadyJoined(object sender, EventArgs e)
         {
-            ErrorWindow popup  = new ErrorWindow("This user is already connected to the privatechatqueue!");
-            popup.ShowDialog();
 
-            curUser.HasOngoingChatSearch = false;
+            this.Dispatcher.Invoke(() =>
+            {
+                ErrorWindow popup = new ErrorWindow("This user is already connected to the privatechatqueue!");
+                popup.ShowDialog();
 
-            this.lookingForAny.IsEnabled = true;
-            this.lookingForFemale.IsEnabled = true;
-            this.lookingForMale.IsEnabled = true;
-            this.lookingForOther.IsEnabled = true;
+                curUser.HasOngoingChatSearch = false;
+
+                this.lookingForAny.IsEnabled = true;
+                this.lookingForFemale.IsEnabled = true;
+                this.lookingForMale.IsEnabled = true;
+                this.lookingForOther.IsEnabled = true;
+
+            });
 
             this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
             privatechat.LeaveQueue(); ///at this time, its still in the matchmanager
@@ -573,7 +578,16 @@ namespace client
 
         private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
         {
+            privatechat.LeaveQueue();
             privatechat.ExitChat();
+            try
+            {
+                privatechat.Client.Close();
+            }
+            catch(Exception er)
+            {
+                Trace.WriteLine("error during closing pc client er msg: " + er.Message);
+            }
             this.Close();
         }
 
