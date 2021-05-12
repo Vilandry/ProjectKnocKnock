@@ -97,15 +97,17 @@ namespace client
                 this.sendPrivateMessageButton.IsEnabled = false;
                 this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
 
+                
+
                 this.curUser.HasOngoingChat = false;
                 this.curUser.HasOngoingChatSearch = false;
 
 
 
-                Paragraph paragraph = new Paragraph();
+                /*Paragraph paragraph = new Paragraph();
                 paragraph.Inlines.Add(new Run("Connection lost! Ending chat..."));
                 paragraph.TextAlignment = TextAlignment.Left;
-                paragraph.Foreground = Brushes.Red;
+                paragraph.Foreground = Brushes.Red;*/
             });
 
         }
@@ -127,6 +129,24 @@ namespace client
                 this.leaveButton.IsEnabled = true;
                 this.sendPrivateMessageButton.IsEnabled = true;
             });            
+        }
+
+        public void OnAlreadyJoined(object sender, EventArgs e)
+        {
+            ErrorWindow popup  = new ErrorWindow("This user is already connected to the privatechatqueue!");
+            popup.ShowDialog();
+
+            curUser.HasOngoingChatSearch = false;
+
+            this.lookingForAny.IsEnabled = true;
+            this.lookingForFemale.IsEnabled = true;
+            this.lookingForMale.IsEnabled = true;
+            this.lookingForOther.IsEnabled = true;
+
+            this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
+            privatechat.LeaveQueue(); ///at this time, its still in the matchmanager
+            curUser.HasOngoingChatSearch = false;
+            curUser.HasOngoingChat = false;
         }
 
         public void OnServerDown(object sender, EventArgs e)
@@ -172,6 +192,7 @@ namespace client
             privatechat.chatEnded += OnChatEnded;
             privatechat.lostConnection += OnServerDown;
             misc.lostConnection += OnServerDown;
+            privatechat.inqueue += OnAlreadyJoined;
 
             this.ResizeMode = ResizeMode.NoResize;
 
@@ -415,22 +436,31 @@ namespace client
 
             if (curUser.HasOngoingChatSearch || curUser.HasOngoingChat)
             {
+                this.lookingForAny.IsEnabled = true;
+                this.lookingForFemale.IsEnabled = true;
+                this.lookingForMale.IsEnabled = true;
+                this.lookingForOther.IsEnabled = true;
+
                 this.joinPrivateMatchServer.Content = "GIVE ME A MATCH!";
-                privatechat.LeaveQueue(); ///at this time, its still on the matchmanager
+                privatechat.LeaveQueue(); ///at this time, its still in the matchmanager
                 curUser.HasOngoingChatSearch = false;
                 curUser.HasOngoingChat = false;
                 Thread.Sleep(500);
             }
             else
             {
+                this.lookingForAny.IsEnabled = false;
+                this.lookingForFemale.IsEnabled = false;
+                this.lookingForMale.IsEnabled = false;
+                this.lookingForOther.IsEnabled = false;
+
+
                 curUser.HasOngoingChatSearch = true;
                 t.Start();
                 this.joinPrivateMatchServer.Content = "Stop searching";
             }
 
         }
-
-        #region Tabchanging buttons
 
         private void sendPrivateMessage(object sender, RoutedEventArgs e)
         {
@@ -441,6 +471,8 @@ namespace client
             messageTextBox.Focus();
         }
 
+
+        #region tabFunctions
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
         {
             MainMenu.IsSelected = true;

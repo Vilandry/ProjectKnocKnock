@@ -23,7 +23,7 @@ namespace client.Controller
         public event EventHandler chatEnded;
         public event EventHandler chatBegins;
         public event EventHandler lostConnection;
-
+        public event EventHandler inqueue;
 
         public PrivateChatController(User cu)
         {
@@ -155,6 +155,16 @@ namespace client.Controller
                 Trace.WriteLine("\n" + responseData + "\nReceived from matchserver: " + responseData + "\n");
 
                 success = (responseData == "OK");
+
+                if(responseData.Substring(0,2) == "ER")
+                {
+                    string[] errargs = responseData.Split("|");
+
+                    if(errargs[1] == "INQUEUE")
+                    {
+                        Trace.WriteLine("Already in queue!");
+                    }
+                }
             }
             catch (Exception e)
             {
@@ -171,7 +181,7 @@ namespace client.Controller
         {
             if (curUser.HasOngoingChat)
             {
-                if (message == "")
+                if (message == "" || message.Trim() == "")
                 {
                     Trace.WriteLine("PrivateChat Warning: empty message");
                     return;
@@ -344,6 +354,7 @@ namespace client.Controller
             }
 
         }
+        
         /// <summary>
         /// when the partner left the chat
         /// </summary>
@@ -391,6 +402,12 @@ namespace client.Controller
         {
             lostConnection?.Invoke(this, e);
             ShutDownChat();
+        }
+
+        protected virtual void OnInQueue(EventArgs e)
+        {
+            inqueue?.Invoke(this, e);
+            curUser.HasOngoingChatSearch = false;
         }
 
     }
