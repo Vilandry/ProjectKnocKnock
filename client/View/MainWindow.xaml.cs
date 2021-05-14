@@ -553,6 +553,12 @@ namespace client
             }            
         }
 
+        private void BeginHelp(object sender, RoutedEventArgs  e)
+        {
+            InfoWindow iw = new InfoWindow("You can start a new private chat using the first button!\nYou can see your Friendlist by clicking on the 2nd button\nCheck out your message hisotry with the 3rd one!\nLog out anytime with the last button!");
+            iw.Show();
+        }
+
         #endregion
 
         private void displayButtons()
@@ -582,7 +588,11 @@ namespace client
             privatechat.ExitChat();
             try
             {
-                privatechat.Client.Close();
+                if(privatechat.Client != null)
+                {
+                    privatechat.Client.Close();
+                }
+                
             }
             catch(Exception er)
             {

@@ -15,6 +15,8 @@
     <None Remove="questionmark.png" />
     <None Remove="solo.png" />
     <None Remove="View\banner.png" />
+    <None Remove="View\door.png" />
+    <None Remove="View\msghistory.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +28,8 @@
     <Resource Include="images\questionmark.png" />
     <Resource Include="images\solo.png" />
     <Resource Include="View\banner.png" />
+    <Resource Include="View\door.png" />
+    <Resource Include="View\msghistory.png" />
   </ItemGroup>
 
 </Project>

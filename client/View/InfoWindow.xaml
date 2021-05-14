@@ -1,0 +1,17 @@
+﻿<Window x:Class="client.View.InfoWindow"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:client.View"
+        mc:Ignorable="d"
+        Title="We are here to help!" Height="239" Width="448"
+        ResizeMode="NoResize">
+
+    <Grid>
+        <TextBlock x:Name="InfoMsg"  HorizontalAlignment="Center" Margin="0,10,0,0" Text="" TextWrapping="Wrap" VerticalAlignment="Top" Height="112" Width="213"/>
+        <Button Click="exit"  Content="Great, Thanks!" HorizontalAlignment="Center" Margin="0,182,0,0" VerticalAlignment="Top" Width="148"/>
+
+    </Grid>
+
+</Window>
