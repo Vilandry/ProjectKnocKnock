@@ -314,7 +314,11 @@ namespace client
 
                 
             if (success == 1)                
-            {                    
+            {
+                this.lookingForAny.IsEnabled = true;
+                this.lookingForFemale.IsEnabled = true;
+                this.lookingForMale.IsEnabled = true;
+                this.lookingForOther.IsEnabled = true;
                 MainMenu.IsSelected = true;                    
                 displayButtons();                
             }               
@@ -333,6 +337,7 @@ namespace client
 
         private void registerAttempt(Object sender, RoutedEventArgs e)
         {
+
             curUser.Username = SignupNameBox.Text;
             string pwd = SignupPasswordBox.Password;
             SignupPasswordBox.Password = "";
@@ -386,6 +391,10 @@ namespace client
             int success = login.tryRegister(curUser, pwd);
             if (success == 1)
             {
+                this.lookingForAny.IsEnabled = true;
+                this.lookingForFemale.IsEnabled = true;
+                this.lookingForMale.IsEnabled = true;
+                this.lookingForOther.IsEnabled = true;
                 MainMenu.IsSelected = true;
                 displayButtons();
             }
@@ -480,20 +489,28 @@ namespace client
         #region tabFunctions
         private void BeginSoloSearch(object sender, RoutedEventArgs e)
         {
+            this.lookingForAny.IsEnabled = true;
+            this.lookingForFemale.IsEnabled = true;
+            this.lookingForMale.IsEnabled = true;
+            this.lookingForOther.IsEnabled = true;
             MainMenu.IsSelected = true;
             privatechat.ExitChat();
         }
 
         private void BeginHistory(object sender, RoutedEventArgs e)
-        {           
-            MessageHistoryPage.IsSelected = true;
+        {
+            loadedHistory.Document.Blocks.Clear();
+            ChatHistoryListView.Items.Clear();
             privatechat.ExitChat();
+            MessageHistoryPage.IsSelected = true;
+            
             string[] histories = misc.GetUserHistoryIDs(curUser.Username);
+            
 
-            foreach(string history in histories)
+            foreach (string history in histories)
             {
                    MessageHistoryEntry entry = new MessageHistoryEntry();
-                   ChatHistoryListView.Items.Clear();
+                   
                    entry.Entrystring = history;
 
                 string[] elements = history.Split("|");
@@ -510,7 +527,7 @@ namespace client
                 ChatHistoryListView.Items.Add(entry);
             }
 
-            loadedHistory.Document.Blocks.Clear();
+            
 
         }
 

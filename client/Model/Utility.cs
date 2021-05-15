@@ -61,6 +61,7 @@ namespace client.Model
             int i = 0, byteCount = 0;
             do
             {
+                Thread.Sleep(100);
                 bytes = new Byte[1024];
                 i = stream.Read(bytes, 0, bytes.Length);
                 // Translate data bytes to a ASCII string.

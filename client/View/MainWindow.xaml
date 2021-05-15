@@ -215,7 +215,7 @@
             </Button.Background>
         </Button> -->
 
-        <Button x:Name="messageHistoryButton"  Content="Message history"  Click="BeginHistory" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Height="82" Width="90" BorderBrush="{x:Null}">
+        <Button x:Name="messageHistoryButton"   Click="BeginHistory" HorizontalAlignment="Left" Margin="10,220,0,0" VerticalAlignment="Top" Height="82" Width="90" BorderBrush="{x:Null}">
             <Button.Background>
                 <ImageBrush ImageSource="/View/msghistory.png"/>
             </Button.Background>

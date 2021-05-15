@@ -237,6 +237,14 @@ namespace client.Controller
                     e.Message = msg;
                     OnMessageArrived(e);
                 }
+                catch(IndexOutOfRangeException ie) ///if the data is corrupted bcs of networking
+                {
+                    /*ExitChat();
+                    EventArgs eventarg = new EventArgs();
+
+                    OnLostConnection(eventarg);*/
+                    Trace.WriteLine("yeah its happening");
+                }
                 catch (Exception e)
                 {
                     Thread.Sleep(100);
