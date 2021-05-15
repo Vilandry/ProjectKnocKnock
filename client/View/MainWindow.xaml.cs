@@ -643,7 +643,7 @@ namespace client
 
                     var parts = entrystring.Split("|");
                     EpochTime = int.Parse(parts[0]);
-                    TimeString = DateTimeOffset.FromUnixTimeSeconds(EpochTime).ToString("0:MM/dd/yy H:mm:ss");
+                    TimeString = DateTimeOffset.FromUnixTimeSeconds(EpochTime).ToString("MM/dd/yy HH:mm:ss");
                     Usernames = parts.Skip(1).ToArray();
                 }
             }

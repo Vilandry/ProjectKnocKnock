@@ -162,7 +162,7 @@
                     <ListView Margin="0,0,1027,112" x:Name="ChatHistoryListView">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Date" DisplayMemberBinding="{Binding TimeString}"/>
+                                <GridViewColumn Header="Date (GMT)" DisplayMemberBinding="{Binding TimeString}"/>
                                 <GridViewColumn Header="Partner" DisplayMemberBinding="{Binding Partner}"/>
                             </GridView>
                         </ListView.View>

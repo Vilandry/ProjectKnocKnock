@@ -83,8 +83,10 @@ namespace client.Controller
 
 
                         //StreamWriter writer = new StreamWriter(stream);
-
                         Trace.WriteLine("Sending: " + history);
+                        /*Thread t = new Thread( (_) => { stream.Write(data); });
+                        t.Start();*/
+                        
                         //writer.Write(data);
                         stream.Write(data);
                         Trace.WriteLine("sent: " + history);
