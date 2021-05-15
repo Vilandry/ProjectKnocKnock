@@ -143,9 +143,6 @@
 
             </TabItem>
 
-            <TabItem Header="BlockList" Background="{x:Null}" Opacity="0.5" x:Name="BlockListPage" Visibility="Hidden">
-
-            </TabItem>
 
             <TabItem Header="MessageHistory" Background="{x:Null}" Opacity="0.5" x:Name="MessageHistoryPage" Visibility="Hidden">
                 <Grid Height="742" Margin="0,0,4,0">

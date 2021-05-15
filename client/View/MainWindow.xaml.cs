@@ -572,7 +572,31 @@ namespace client
 
         private void BeginHelp(object sender, RoutedEventArgs  e)
         {
-            InfoWindow iw = new InfoWindow("You can start a new private chat using the first button!\nYou can see your Friendlist by clicking on the 2nd button\nCheck out your message hisotry with the 3rd one!\nLog out anytime with the last button!");
+
+            string msg = "";
+
+            if(MainMenu.IsSelected)
+            {
+                msg = msg + "Here You can start a private chat! Set your preferences, and then begin chatting!\n";
+            }
+            if (FriendListPage.IsSelected)
+            {
+                msg = msg + "Here You can see your friendlist! You can see the mutual and onesided friendlists.\n";
+            }
+            if(MessageHistoryPage.IsSelected)
+            {
+                msg = msg + "Here You can see your archived chats. Click on an entry, and relive the moments!\n";
+            }
+            if(PrivateChat.IsSelected)
+            {
+                msg = msg + "Type your message, and then send it by either clicking on the button or hitting enter!\n";
+            }
+            if (BeforeLogin.IsSelected)
+            {
+                msg = "Either sign up, or register! Add Your username and password, and then let's chat!";
+            }
+
+            InfoWindow iw = new InfoWindow(msg);
             iw.Show();
         }
 
