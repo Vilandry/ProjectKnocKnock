@@ -43,7 +43,7 @@ namespace client
 
             if(username != curUser.Username)
             {
-                //Console.Beep();
+                Console.Beep();
             }
 
             string text = msg.Message;
